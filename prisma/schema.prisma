@@ -1,0 +1,309 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+enum UserRole {
+  WEB_MASTER
+  ADMIN
+  USER
+  ORGANIZER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  username      String    @unique
+  password      String
+  emailVerified DateTime?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  orders        Order[]
+  passCards     PassCard[]
+  isTwoFactorEnabled    Boolean                @default(false)
+  twoFactorConfirmation TwoFactorConfirmation?
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  status          OrderStatus
+  tier            CardTier
+  amount          Int
+  shippingAddress Json?
+  billingAddress  Json?
+  paymentIntentId String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  passCards       PassCard[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model TwoFactorConfirmation {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model PassCard {
+  id             String             @id @default(cuid())
+  cardNumber     String             @unique
+  userId         String
+  orderId        String
+  status         PassCardStatus
+  tier           CardTier
+  validFrom      DateTime?
+  validUntil     DateTime?
+  divesRemaining Int?
+  trackingNumber String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order          Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  bookings       ExperienceBooking[]
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+}
+
+model Attribute {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String          @unique
+  type        AttributeType    @default(default)
+  shape       AttributeShape   @default(default)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  switchers   Switcher[]
+  products    ProductAttribute[]
+
+  @@index([slug])
+  @@index([type])
+}
+
+model Switcher {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?   @db.Text
+  attributeId String
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    ProductSwitcher[]
+
+  @@index([slug])
+  @@index([attributeId])
+}
+
+model ProductAttribute {
+  id          String    @id @default(cuid())
+  productId   String
+  attributeId String
+  value       String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([productId, attributeId])
+  @@index([productId])
+  @@index([attributeId])
+}
+
+model ProductSwitcher {
+  id          String    @id @default(cuid())
+  productId   String
+  switcherId  String
+  selected    String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  switcher    Switcher  @relation(fields: [switcherId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([productId, switcherId])
+  @@index([productId])
+  @@index([switcherId])
+}
+
+model Product {
+  id          String       @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  tier        CardTier
+  images      Json[]      // Array of { id: string, url: string, alt: string, colorId?: string }
+  attributes  ProductAttribute[]
+  switchers   ProductSwitcher[]
+  features    String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([tier])
+}
+
+model Experience {
+  id             String             @id @default(cuid())
+  title          String            
+  description    String            
+  location       String
+  startDate      DateTime
+  endDate        DateTime
+  capacity       Int
+  availableSpots Int
+  imageUrl       String?           
+  status         ExperienceStatus   @default(draft)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  bookings       ExperienceBooking[]
+  allowedTiers   ExperienceTier[]
+
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+model ExperienceTier {
+  id           String     @id @default(cuid())
+  experienceId String
+  tier         CardTier
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@unique([experienceId, tier])
+  @@index([experienceId])
+}
+
+model ExperienceBooking {
+  id           String        @id @default(cuid())
+  experienceId String
+  passCardId   String
+  status       BookingStatus @default(pending)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  experience   Experience    @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  passCard     PassCard      @relation(fields: [passCardId], references: [id], onDelete: Cascade)
+
+  @@index([experienceId])
+  @@index([passCardId])
+  @@index([status])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum CardTier {
+  plus
+  ultra
+  max
+}
+
+enum OrderStatus {
+  pending
+  processing
+  completed
+  cancelled
+}
+
+enum PassCardStatus {
+  pending_production
+  in_production
+  ready_to_ship
+  shipped
+  delivered
+  activated
+  expired
+  cancelled
+}
+
+enum ExperienceStatus {
+  draft
+  published
+  cancelled
+  completed
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+}
+
+enum AttributeType {
+  default
+  label
+  color
+  image
+}
+
+enum AttributeShape {
+  default
+  square
+  rounded
+  circle
+}
