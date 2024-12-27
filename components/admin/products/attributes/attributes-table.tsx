@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/table"
 import { useState } from "react"
 import { AttributeDetailsDialog } from "./attribute-details-dialog"
-import { AttributeFormDialog } from "./attribute-form-dialog"
 import { AttributeActions } from "./attribute-actions"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/components/ui/use-toast"
@@ -18,41 +17,25 @@ import { Attribute } from "@prisma/client"
 
 interface AttributesTableProps {
   searchQuery: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onUpdate:(attribute:Attribute) => void
+  onDelete:(id: string) => Promise<void>
+  attributes:Attribute[]
+  filteredAttributes:Attribute[]
+  selectedAttribute:Attribute
+  setAttributes:React.Dispatch<React.SetStateAction<Attribute[]>>
+  setSelectedAttribute: React.Dispatch<React.SetStateAction<Attribute>>
 }
 
-export function AttributesTable({ searchQuery }: AttributesTableProps) {
-  const [attributes, setAttributes] = useState<Attribute[]>([])
-  const [selectedAttribute, setSelectedAttribute] = useState<Attribute | null>(null)
+export function AttributesTable({ searchQuery,open,
+  onUpdate,
+  onDelete,
+  onOpenChange,filteredAttributes,selectedAttribute,setSelectedAttribute }: AttributesTableProps) {
+ 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-  const [isFormOpen, setIsFormOpen] = useState(false)
   const { toast } = useToast()
 
-  const filteredAttributes = attributes.filter((attribute) =>
-    attribute.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    attribute.slug.toLowerCase().includes(searchQuery.toLowerCase())
-  )
-
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`/api/admin/products/attributes/${id}`, {
-        method: "DELETE"
-      })
-
-      if (!response.ok) throw new Error("Failed to delete attribute")
-
-      setAttributes(attributes.filter(attr => attr.id !== id))
-      toast({
-        title: "Attribute deleted",
-        description: "The attribute has been deleted successfully."
-      })
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to delete attribute. Please try again."
-      })
-    }
-  }
 
   return (
     <>
@@ -92,9 +75,9 @@ export function AttributesTable({ searchQuery }: AttributesTableProps) {
                     }}
                     onEdit={() => {
                       setSelectedAttribute(attribute)
-                      setIsFormOpen(true)
+                      onOpenChange(true)
                     }}
-                    onDelete={() => handleDelete(attribute.id)}
+                    onDelete={() => onDelete(attribute.id)}
                   />
                 </TableCell>
               </TableRow>
@@ -109,15 +92,7 @@ export function AttributesTable({ searchQuery }: AttributesTableProps) {
         onOpenChange={setIsDetailsOpen}
       />
 
-      <AttributeFormDialog
-        attribute={selectedAttribute}
-        open={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onSubmit={async (data) => {
-          // Handle attribute creation/update
-          setIsFormOpen(false)
-        }}
-      />
+      
     </>
   )
 }

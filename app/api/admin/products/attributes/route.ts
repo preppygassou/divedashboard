@@ -24,13 +24,13 @@ export async function POST(req: Request) {
   try {
     const session = await auth()
     
-    if (!session || session.user.role !== "ADMIN") {
+   /*  if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    } */
 
     const data = await req.json()
     const attribute = await createAttribute(data)
-
+console.log("attribute",attribute)
     if (!attribute) {
       return NextResponse.json(
         { error: "Failed to create attribute" },

@@ -4,72 +4,116 @@ import { useState, useEffect } from "react"
 import { Product, ProductImage } from "@/lib/types/product"
 import { ProductImages } from "./product-images"
 import { ProductAttributes } from "./product-attributes"
-import { ProductSwitchers } from "./product-switchers"
-import { ProductFeatures } from "./product-features"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
+import { useRouter } from 'next/navigation';
+import { ProductFeaturedImage } from "./product-feature-image"
+import Menu from "../menu"
+import { useStore } from '@/store';
+import { addProductToCart } from "@/store/action"
 
 interface ProductDetailsProps {
   product: Product
 }
 
 export function ProductDetails({ product }: ProductDetailsProps) {
-  const [switchers, setSwitchers] = useState(product.switchers)
-  const [currentImages, setCurrentImages] = useState<ProductImage[]>(product.images)
-  const selectedColor = switchers.find(s => s.id === "color")?.selected
 
-  useEffect(() => {
-    if (selectedColor) {
-      const filtered = product.images.filter(img => 
-        !img.colorId || img.colorId === selectedColor
-      )
-      setCurrentImages(filtered)
-    } else {
-      setCurrentImages(product.images)
+  const [selectedVariation, setselectedVariation] = useState(null);
+
+  /* useEffect(() => {
+    if (product?.variations?.length > 0) {
+      setselectedVariation(product.variations[0].switcher);
     }
-  }, [selectedColor, product.images])
+  }, [product?.variations]); */
 
-  const handleSwitcherChange = (id: string, value: string) => {
-    setSwitchers(switchers.map(s => 
-      s.id === id ? { ...s, selected: value } : s
-    ))
+  const { state, dispatch } = useStore();
+  const router = useRouter();
+
+  const addToCart = () => {
+    const cartItem = {
+      product_id: product.id,
+      variation_id: selectedVariation?.switcher?.id,
+      variationName: selectedVariation?.switcher?.name,
+      variationFeaturedImage: selectedVariation?.switcher?.featuredImage,
+      price: Number(product.price),
+      quantity: 1,
+    };
+    addProductToCart(dispatch, cartItem)
+    router.push('/checkout/shipping');
+    // Add your add to cart logic here
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      <ProductImages images={currentImages} />
-      
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">{product.name}</h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            €{(product.price / 100).toFixed(2)}
-          </p>
+    <div className="grid gap-8 md:grid-cols-2 h-full">
+      <ProductFeaturedImage featuredImage={selectedVariation&&selectedVariation?.featuredImage?selectedVariation?.featuredImage:product?.featuredImage} />
+      {/* <ProductImages images={currentImages} /> */}      
+      <div className="space-y-4 md:space-y-[117px] p-4 md:p-[39px] h-auto md:h-full">
+      <div className="hidden md:block">
+          <Menu type={"white"} />
+        </div>
+        <div className="space-y-4 md:space-y-[40px]">
+          <div className="">
+        <p
+          style={{
+            color: '#F2F1F7',
+            textShadow: '0px 4px 4px rgba(0, 0, 0, 0.07)',
+            fontFamily: '"Roboto Flex"',
+            fontSize: '15px',
+            fontStyle: 'normal',
+            fontWeight: 900,
+            lineHeight: '129%', // 19.35px
+          }}
+        >
+          {selectedVariation?.availableQuantity ? selectedVariation?.availableQuantity + " " + "Pass Restant(s)" : "Out of Stock"}
+        </p>
+        <h1
+          className="text-2xl font-bold mb-2"
+          style={{
+            color: '#F2F1F7',
+            textShadow: '0px 4px 4px rgba(0, 0, 0, 0.07)',
+            fontSize: '48px',
+            fontWeight: 900,
+            lineHeight: '129%', // 61.92px
+          }}
+        >
+          {product?.name}
+        </h1>
+        <p
+          className="text-[#515459] text-[20px] font-semibold leading-[33px]"
+        >
+          Price: €{product?.price}
+        </p>
+        <p
+          className="text-[#515459] mb-4"
+          style={{
+            fontSize: '16px',
+            fontWeight: 500,
+            lineHeight: '143.75%', // 23px
+          }}
+        >
+          {product&&product?.description?.replace(/<\/?[^>]+(>|$)/g, "")}
+        </p>
+          </div>
+        
+         
+        <ProductAttributes attributes={product?.attributes} selectedVariation={selectedVariation} setselectedVariation={setselectedVariation}/>
+
+
+          <div className="flex-1 flex items-center">
+          <Button
+        className="bg-[#F2F1F7] text-black rounded-[30px] px-[61px] py-[9px] shadow-md hover:bg-[#F2F1F7]"
+        style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.08)' }}
+        onClick={addToCart}
+          >
+        Commander
+          </Button>
+          </div>
         </div>
 
-        <p className="text-muted-foreground">{product.description}</p>
-
-        <Separator />
-
-        <ProductSwitchers
-          switchers={switchers}
-          onSwitcherChange={handleSwitcherChange}
-        />
-
-        <Separator />
-
-        <ProductFeatures features={product.features} />
-
-        <Separator />
-
-        <ProductAttributes attributes={product.attributes} />
-
-        <Button asChild className="w-full">
-          <Link href={`/checkout/shipping?tier=${product.tier}`}>
+       {/*  <Button asChild className="w-full">
+          <Link href={`/checkout/shipping?tier=${product?.tier}`}>
             Get Started
           </Link>
-        </Button>
+        </Button> */}
       </div>
     </div>
   )

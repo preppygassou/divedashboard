@@ -11,7 +11,7 @@ import {
 import { Product } from "@/lib/types/product"
 import { Plus } from "lucide-react"
 
-const tiers: Product["tier"][] = ["basic", "pro", "elite"]
+const tiers: Product["tier"][] = ["plus", "ultra", "max"]
 
 interface ProductFiltersProps {
   onCreateNew: () => void

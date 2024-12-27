@@ -10,16 +10,16 @@ import {
 } from "@/components/ui/select"
 import { ColorSwitcher } from "./color-switcher"
 
-interface ProductSwitchersProps {
-  switchers: ProductSwitcher[]
+interface ProductVariationsProps {
+  variations: ProductSwitcher[]
   onSwitcherChange: (id: string, value: string) => void
 }
 
-export function ProductSwitchers({ switchers, onSwitcherChange }: ProductSwitchersProps) {
+export function ProductVariations({ variations, onSwitcherChange }: ProductVariationsProps) {
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Options</h3>
-      {switchers.map((switcher) => (
+      {variations?.map((switcher) => (
         <div key={switcher.id} className="space-y-4">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             {switcher.name}

@@ -1,23 +1,28 @@
 import * as z from "zod"
+import { CardTier} from "@prisma/client"
+
 
 export const productSchema = z.object({
-  id: z.string(),
   name: z.string().min(1, "Name is required"),
+  featuredImage: z.object({url:z.string().url()}).optional(),
   description: z.string().min(1, "Description is required"),
   price: z.number().min(0, "Price must be positive"),
-  tier: z.enum(["basic", "pro", "elite"]),
+  initialQuantity: z.number().min(0, "initial Quantity must be positive"),
+  availableQuantity: z.number().min(0, "available Quantity must be positive"),
+  soldQuantity: z.number().min(0, "sold Quantity must be positive"),
+  tier:z.nativeEnum(CardTier),
   images: z.array(z.object({
     id: z.string(),
     url: z.string().url(),
     alt: z.string(),
     colorId: z.string().optional(),
-  })),
+  })).optional(),
   attributes: z.array(z.object({
     id: z.string(),
     name: z.string(),
     value: z.string(),
-  })),
-  switchers: z.array(z.object({
+  })).optional(),
+  variations: z.array(z.object({
     id: z.string(),
     name: z.string(),
     options: z.array(z.string()),
@@ -29,8 +34,8 @@ export const productSchema = z.object({
       pattern: z.string().optional(),
       preview: z.string(),
     })).optional(),
-  })),
-  features: z.array(z.string()),
+  })).optional(),
+  /* features: z.array(z.string()).optional(), */
 })
 
-export type ProductFormData = z.infer<typeof productSchema>
+//export type ProductFormData = z.infer<typeof productSchema>

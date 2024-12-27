@@ -86,6 +86,6 @@ export const attributeSchema = z.object({
     slug: z.string().min(1, "Switcher slug is required")
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format"),
     description: z.string().optional(),
-    image: z.string().url().optional(),
-  })),
+    image: z.object({url: z.string().url()}).optional(),
+  })).optional(),
 })

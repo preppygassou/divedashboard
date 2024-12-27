@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Form,
   FormControl,
@@ -29,15 +28,18 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { attributeSchema } from "@/lib/schemas"
 import { SwitcherFields } from "./switcher-fields"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { createAttribute, getAttributes } from "@/lib/data/attribute"
 
 interface AttributeFormDialogProps {
   attribute?: (Attribute & { switchers: Switcher[] }) | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void
+  onSubmit?: () => void
+  setAttributes
 }
 
 export function AttributeFormDialog({
@@ -45,22 +47,48 @@ export function AttributeFormDialog({
   open,
   onOpenChange,
   onSuccess,
+  onSubmit,
+  setAttributes
 }: AttributeFormDialogProps) {
+
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [attributeup, setattributeup] = useState(false)
   const { toast } = useToast()
+  
+
+ 
 
   const form = useForm({
     resolver: zodResolver(attributeSchema),
-    defaultValues: attribute || {
-      name: "",
-      slug: "",
-      type: AttributeType.default,
-      shape: AttributeShape.default,
-      switchers: [],
+    defaultValues: {
+      name: attribute?.name || "",
+      slug: attribute?.slug || "",
+      type: attribute?.type || AttributeType.default,
+      shape: attribute?.shape || AttributeShape.default,
+      switchers: attribute?.switchers || [],
     },
   })
 
-  const handleSubmit = async (data: any) => {
+    useEffect(() => {
+      if (attribute) {
+        form.reset({
+          name: attribute.name || "",
+          slug: attribute.slug || "",
+          type: attribute.type || AttributeType.default,
+          shape: attribute.shape || AttributeShape.default,
+          switchers: attribute.switchers || [],
+        });
+      }
+    }, [attribute]);
+
+  const handleSubmit = async (values: any) => {
+
+const switchers = attribute
+  ? values.switchers
+  : { create: values.switchers || [] }
+values.switchers = switchers
+
     try {
       setIsSubmitting(true)
       const url = attribute 
@@ -70,18 +98,20 @@ export function AttributeFormDialog({
       const response = await fetch(url, {
         method: attribute ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(values),
       })
 
       if (!response.ok) {
         throw new Error('Failed to save attribute')
       }
-
+     // await createAttribute(values)
+      const updatedAttributes = await getAttributes()
+      setAttributes(updatedAttributes)
       toast({
         title: `Attribute ${attribute ? 'updated' : 'created'} successfully`,
         description: `The attribute has been ${attribute ? 'updated' : 'created'}.`,
       })
-
+      
       onSuccess?.()
       onOpenChange(false)
       form.reset()
@@ -96,9 +126,10 @@ export function AttributeFormDialog({
     }
   }
 
+ 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
           <DialogTitle>
             {attribute ? "Edit Attribute" : "Create Attribute"}

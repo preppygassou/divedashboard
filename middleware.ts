@@ -14,7 +14,7 @@ export default auth((req) => {
   const isAdminRoute = nextUrl.pathname.startsWith('/admin')
   const isCheckoutRoute = nextUrl.pathname.startsWith('/checkout')
 
-  console.log(req.auth)
+  //console.log(req.auth)
 
   if (isApiAuthRoute) {
     return null
@@ -42,9 +42,18 @@ export default auth((req) => {
   }
 
 
-  /* if (!isLoggedIn && (isAdminRoute || isCheckoutRoute)) {
-    return Response.redirect(new URL('/auth/login', nextUrl))
-  } */
+  if (!isLoggedIn && (isAdminRoute || isCheckoutRoute)) {
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    );
+  }
 
   /* if (isAdminRoute) {
     if (req.auth?.user?.role !== "ADMIN") {

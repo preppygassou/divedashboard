@@ -30,11 +30,15 @@ export type ProductSwitcher = {
 export interface Product {
   id: string;
   name: string;
+  featuredImage: Object;
   description: string;
   price: number;
-  tier: 'basic' | 'pro' | 'elite';
+  availableQuantity: number;
+  soldQuantity: number;
+  initialQuantity: number;
+  tier: 'plus' | 'ultra' | 'max';
   images: ProductImage[];
   attributes: ProductAttribute[];
-  switchers: ProductSwitcher[];
-  features: string[];
+  variations: ProductSwitcher[];
+  /* features: string[]; */
 }

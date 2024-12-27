@@ -36,21 +36,35 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
   const form = useForm<Product>({
     resolver: zodResolver(productSchema),
     defaultValues: product || {
-      id: `product-${Date.now()}`,
+     /*  id: `product-${Date.now()}`, */
       name: "",
       description: "",
       price: 0,
+      initialQuantity: 1,
+      availableQuantity: 1,
+      soldQuantity: 0,
       tier: "plus",
+      featuredImage: {
+        url:"https://dive.paris/wp-content/uploads/2024/10/Group-676.png"
+        },
+        /* attributes: [],
+        variations: [], */
+        images: [],
+     /*  
       images: [],
       attributes: [],
-      switchers: [],
-      features: [],
+      variations: [],
+      features: [], */
     },
   })
+  async function onSubmitIt(values: Product) {
+    console.log("values", values)
+     //onSubmit(values)
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmitIt)} className="space-y-8">
         <div className="grid gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -81,9 +95,9 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="basic">Basic</SelectItem>
-                    <SelectItem value="pro">Pro</SelectItem>
-                    <SelectItem value="elite">Elite</SelectItem>
+                    <SelectItem value="plus">Plus</SelectItem>
+                    <SelectItem value="ultra">Ultra</SelectItem>
+                    <SelectItem value="max">Max</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -127,7 +141,7 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
         <ImageUpload form={form} />
         <AttributeFields form={form} />
         <SwitcherFields form={form} />
-        <FeatureFields form={form} />
+        {/* <FeatureFields form={form} /> */}
 
         <Button type="submit">
           {product ? "Update Product" : "Create Product"}

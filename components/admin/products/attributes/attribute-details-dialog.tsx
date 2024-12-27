@@ -26,11 +26,12 @@ export function AttributeDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
           <DialogTitle>Attribute Details</DialogTitle>
         </DialogHeader>
-
+        
+        
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -61,7 +62,7 @@ export function AttributeDetailsDialog({
               <h3 className="font-semibold mb-2">Switchers</h3>
               {attribute.switchers.length > 0 ? (
                 <div className="grid gap-4">
-                  {attribute.switchers.map((switcher) => (
+                  {attribute?.switchers?.map((switcher) => (
                     <div
                       key={switcher.id}
                       className="rounded-lg border p-4"

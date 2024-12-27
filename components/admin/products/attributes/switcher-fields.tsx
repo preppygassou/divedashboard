@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Plus, Trash, ImagePlus } from "lucide-react"
 import { AttributeType } from "@prisma/client"
+import { v4 } from 'uuid'
 
 interface SwitcherFieldsProps {
   form: UseFormReturn<any>
@@ -21,21 +22,19 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
     form.setValue("switchers", [
       ...currentSwitchers,
       {
-        id: `new-${Date.now()}`,
+        /* id: `new-${Date.now()}`, */
         name: "",
+        image: attributeType === AttributeType.image ? { url: "https://dive.paris/wp-content/uploads/woocommerce-placeholder-300x300.png" } : undefined,
         slug: "",
         description: "",
-        image: attributeType === AttributeType.image ? "" : undefined,
       },
     ])
   }
 
   const removeSwitcher = (index: number) => {
     const currentSwitchers = form.getValues("switchers")
-    form.setValue(
-      "switchers",
-      currentSwitchers.filter((_, i) => i !== index)
-    )
+    const filters= currentSwitchers.filter((_, i) => i !== index)
+    form.setValue("switchers",filters)
   }
 
   return (
@@ -83,7 +82,7 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
                   <div className="space-y-2">
                     <Input
                       placeholder="Image URL"
-                      {...form.register(`switchers.${index}.image`)}
+                      {...form.register(`switchers.${index}.image.url`)}
                     />
                     <Button
                       type="button"

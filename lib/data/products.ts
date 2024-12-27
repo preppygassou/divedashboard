@@ -1,12 +1,12 @@
 import { Product } from "@/lib/types/product"
 
 export const products: Record<string, Product> = {
-  basic: {
-    id: "basic-card",
-    name: "Basic Dive Card",
+  plus: {
+    id: "plus-card",
+    name: "plus Dive Card",
     description: "Perfect for beginners and casual divers. Access to essential diving spots and basic features.",
     price: 19900,
-    tier: "basic",
+    tier: "plus",
     images: [
       {
         id: "blue-1",
@@ -97,12 +97,12 @@ export const products: Record<string, Product> = {
       "Email support"
     ]
   },
-  pro: {
+  ultra: {
     id: "pro-card",
     name: "Pro Dive Card",
     description: "For experienced divers seeking premium features and exclusive access to advanced diving spots.",
     price: 39900,
-    tier: "pro",
+    tier: "ultra",
     images: [
       {
         id: "gold-1",
@@ -207,12 +207,12 @@ export const products: Record<string, Product> = {
       "Free dive photography sessions"
     ]
   },
-  elite: {
+  max: {
     id: "elite-card",
     name: "Elite Dive Card",
     description: "The ultimate diving experience with unlimited dives, exclusive benefits, and VIP treatment.",
     price: 79900,
-    tier: "elite",
+    tier: "max",
     images: [
       {
         id: "black-diamond-1",

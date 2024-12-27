@@ -29,7 +29,7 @@ export function OrderDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
           <DialogTitle>Order Details</DialogTitle>
         </DialogHeader>

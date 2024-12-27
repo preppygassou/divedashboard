@@ -47,7 +47,7 @@ export function ProductsTable({
               <TableHead>Name</TableHead>
               <TableHead>Tier</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead>Features</TableHead>
+              {/* <TableHead>Features</TableHead> */}
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -57,7 +57,7 @@ export function ProductsTable({
                 <TableCell>
                   <div className="relative h-12 w-12 rounded-md overflow-hidden">
                     <Image
-                      src={product.images[0].url}
+                      src={product?.featuredImage?.url}
                       alt={product.name}
                       fill
                       className="object-cover"
@@ -71,7 +71,7 @@ export function ProductsTable({
                 <TableCell>
                   <ProductPrice price={product.price} />
                 </TableCell>
-                <TableCell>{product.features.length} features</TableCell>
+                
                 <TableCell className="text-right">
                   <ProductActions
                     onView={() => setSelectedProduct(product)}

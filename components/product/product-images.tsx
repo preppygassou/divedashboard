@@ -20,8 +20,8 @@ export function ProductImages({ images }: ProductImagesProps) {
     <div className="space-y-4">
       <div className="relative aspect-square overflow-hidden rounded-lg">
         <Image
-          src={selectedImage?.url || images[0].url}
-          alt={selectedImage?.alt || images[0].alt}
+          src={selectedImage?.url || images[0]?.url}
+          alt={selectedImage?.alt || images[0]?.alt}
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ProductsTable } from "@/components/admin/products/products-table"
@@ -10,51 +10,79 @@ import { Search } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Product } from "@/lib/types/product"
 import { products as initialProducts } from "@/lib/data/products"
+import { createProduct, deleteProduct, getProducts, updateProduct } from "@/lib/data/product"
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [products, setProducts] = useState<Record<string, Product>>(initialProducts)
   const { toast } = useToast()
+  const [products, setProducts] = useState<Record<string, Product>>({})
 
-  const handleCreateProduct = (product: Product) => {
-    setProducts((prev) => ({
-      ...prev,
-      [product.tier]: product,
-    }))
-    setIsCreateDialogOpen(false)
-    toast({
-      title: "Product created",
-      description: `${product.name} has been created successfully.`,
-    })
-  }
+  useEffect(() => {
+    const loadProducts = async () => {
+      const fetchedProducts = await getProducts()
+      setProducts(fetchedProducts)
+    }
+    loadProducts()
+  }, [])
 
-  const handleUpdateProduct = (product: Product) => {
-    setProducts((prev) => ({
-      ...prev,
-      [product.tier]: product,
-    }))
-    toast({
-      title: "Product updated",
-      description: `${product.name} has been updated successfully.`,
-    })
-  }
-
-  const handleDeleteProduct = (productId: string) => {
-    setProducts((prev) => {
-      const newProducts = { ...prev }
-      Object.keys(newProducts).forEach((key) => {
-        if (newProducts[key].id === productId) {
-          delete newProducts[key]
-        }
+  const handleCreateProduct = async (product: Product) => {
+    console.log("submit product")
+    try {
+      await createProduct(product)
+      const updatedProducts = await getProducts()
+      setProducts(updatedProducts)
+      setIsCreateDialogOpen(false)
+      toast({
+        title: "Product created",
+        description: `${product.name} has been created successfully.`,
       })
-      return newProducts
-    })
-    toast({
-      title: "Product deleted",
-      description: `Product has been deleted successfully.`,
-    })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create product",
+        variant: "destructive",
+      })
+    }
   }
+
+  const handleUpdateProduct = async (product: Product) => {
+    try {
+      await updateProduct(product)
+      const updatedProducts = await getProducts()
+      setProducts(updatedProducts)
+      toast({
+        title: "Product updated",
+        description: `${product.name} has been updated successfully.`,
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update product",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      await deleteProduct(productId)
+      const updatedProducts = await getProducts()
+      setProducts(updatedProducts)
+      toast({
+        title: "Product deleted",
+        description: "Product has been deleted successfully.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete product",
+        variant: "destructive",
+      })
+    }
+  }
+
+  console.log("products",products)
 
   return (
     <div className="space-y-6">
