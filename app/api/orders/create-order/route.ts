@@ -18,7 +18,43 @@ export async function POST(req: NextRequest) {
 
 
    // Create the order in the database
-   const newOrder = await db.order.create({
+  interface OrderItem {
+    id: string;
+    variation_id?: string;
+    quantity: number;
+    price: number;
+  }
+
+  interface Address {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  }
+
+  interface CreateOrderData {
+    userId: string;
+    orderNumber: string;
+    paymentMethod: string;
+    currency: string;
+    setPaid: boolean;
+    paymentMethodTitle: string;
+    shippingAddress: Address;
+    billingAddress: Address;
+    total: number;
+    orderItems: {
+      create: {
+        productId: string;
+        variationId?: string | null;
+        quantity: number;
+        price: number;
+        totalPrice: number;
+      }[];
+    };
+  }
+
+  const newOrder = await db.order.create({
     data: {
       userId,
       orderNumber,
@@ -30,7 +66,7 @@ export async function POST(req: NextRequest) {
       billingAddress: billingAddress || shippingAddress,
       total,
       orderItems: {
-        create: items.map((item) => ({
+        create: items.map((item: OrderItem) => ({
           productId: item.id,
           variationId: item.variation_id || null,
           quantity: item.quantity,
