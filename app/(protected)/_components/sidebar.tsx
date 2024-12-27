@@ -18,8 +18,6 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import Link from 'next/link'
-import { twMerge } from 'tailwind-merge'
-import CustomModal from '@/components/global/custom-modal'
 import { Separator } from '@/components/ui/separator'
 
 type Props = {
