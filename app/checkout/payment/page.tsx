@@ -81,8 +81,9 @@ const PayementPage: React.FC = () => {
 
     fetchPaymentIntent();
   }, []);
-
+// @ts-expect-error
   const handleSubmit = async (event: React.FormEvent) => {
+    // @ts-ignore
     event.preventDefault();
   
     if (!stripe || !elements) {
@@ -122,15 +123,14 @@ const PayementPage: React.FC = () => {
         confirmParams: {
           return_url: `${window.location.origin}/checkout/success`, // Redirect URL on success
         },
-        shipping: JSON.stringify(state?.shipping), // Add shipping details to metadata
+        shipping: JSON.stringify(state?.shipping),  // Add shipping details to metadata
         metadata: {
           orderId: order,
           line_items: JSON.stringify([state?.cart]), // Add cart items to metadata
           billing: JSON.stringify(state?.billing), // Add billing details to metadata
           shipping: JSON.stringify(state?.shipping) // Add shipping details to metadata
         },
-       /*  redirect: "if_required" */
-        redirect: "always"
+        redirect: "if_required"
       });
 
       if (!error && paymentIntent?.status === 'succeeded'&&order) {
