@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     const data = await req.json()
     const attribute = await createAttribute(data)
-console.log("attribute",attribute)
+
     if (!attribute) {
       return NextResponse.json(
         { error: "Failed to create attribute" },

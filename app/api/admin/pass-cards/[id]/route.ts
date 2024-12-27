@@ -13,18 +13,18 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const passCard = await db.passCard.findByPk(params.id, {
-      include: [
-        {
-          model: db.user,
-          as: 'user',
-          attributes: ['name', 'email']
-        },
-        {
-          model: db.order,
-          as: 'order'
+    const passCard = await db.passCard.findUnique({
+      where: { id: params.id },
+      include: {
+      user: {
+        select: {
+        firstName: true,
+        lastName: true,
+        email: true
         }
-      ]
+      },
+      order: true
+      }
     });
 
     if (!passCard) {
@@ -55,17 +55,22 @@ export async function PATCH(
     const body = await req.json();
     const { status, trackingNumber } = body;
 
-    const passCard = await db.passCard.findByPk(params.id);
+    const passCard = await db.passCard.findUnique({
+      where: { id: params.id }
+    });
     if (!passCard) {
       return NextResponse.json({ error: "Pass card not found" }, { status: 404 });
     }
 
-    await passCard.update({
+    const updatedPassCard = await db.passCard.update({
+      where: { id: params.id },
+      data: {
       status,
       trackingNumber
+      }
     });
 
-    return NextResponse.json(passCard);
+    return NextResponse.json(updatedPassCard);
   } catch (error) {
     console.error('Error updating pass card:', error);
     return NextResponse.json(

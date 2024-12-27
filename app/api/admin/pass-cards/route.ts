@@ -10,19 +10,20 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const passCards = await db.passCard.findAll({
-      include: [
-        {
-          model: db.user,
-          as: 'user',
-          attributes: ['name', 'email']
-        },
-        {
-          model: db.order,
-          as: 'order'
+    const passCards = await db.passCard.findMany({
+      include: {
+      user: {
+        select: {
+        firstName: true,
+        lastName: true,
+        email: true
         }
-      ],
-      order: [['createdAt', 'DESC']]
+      },
+      order: true
+      },
+      orderBy: {
+      createdAt: 'desc'
+      }
     });
 
     return NextResponse.json(passCards);
@@ -46,17 +47,23 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { orderId, status, trackingNumber } = body;
 
-    const order = await db.order.findByPk(orderId);
+    const order = await db.order.findUnique({
+      where: { id: orderId }
+    });
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     const passCard = await db.passCard.create({
+      data: {
       userId: order.userId,
       orderId: order.id,
       tier: order.tier,
       status,
-      trackingNumber
+      trackingNumber,
+      cardNumber
+      : generateCardNumber()
+      }
     });
 
     return NextResponse.json(passCard);
@@ -67,4 +74,11 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+
+function generateCardNumber(): string {
+  const prefix = "PC";
+  const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+  return `${prefix}${randomNumber}`;
 }

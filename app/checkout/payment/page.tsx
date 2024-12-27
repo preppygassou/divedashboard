@@ -130,8 +130,7 @@ const PayementPage: React.FC = () => {
           billing: JSON.stringify(state?.billing), // Add billing details to metadata
           shipping: JSON.stringify(state?.shipping) // Add shipping details to metadata
         },
-        redirect: "always"
-        /* redirect: "if_required" */
+        redirect: "if_required"
       });
 
       if (!error && paymentIntent?.status === 'succeeded'&&order) {
