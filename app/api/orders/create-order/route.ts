@@ -82,7 +82,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ orderId: newOrder .id }, { status: 200 });
   } catch (error) {
-    console.error('WooCommerce order creation error', error.response.data);
+    /* if (error instanceof Error && error.response && error.response.data) {
+      console.error('WooCommerce order creation error', error.response.data);
+    } else {
+      console.error('WooCommerce order creation error', error);
+    } */
     return NextResponse.json({ error: 'Failed to create WooCommerce order' }, { status: 500 });
   }
 }
