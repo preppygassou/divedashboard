@@ -18,7 +18,10 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     return { error: "Non autorisé" };
   }
 
-  const dbUser = await getUserById(user?.id);
+  if (!user.id) {
+    return { error: "Non autorisé" };
+  }
+  const dbUser = await getUserById(user.id);
 
   if (!dbUser) {
     return { error: "Non autorisé" };
