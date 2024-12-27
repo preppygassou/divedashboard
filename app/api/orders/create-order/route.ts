@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
      const orderNumber = `ORD-${uuidv4().slice(0, 8).toUpperCase()}`;
 
      // Calculate totalAmount
-    const total: number = items.reduce(
+    const totalAmount: number = items.reduce(
       (sum: number, item: any) => sum + item.price * item.quantity,
       0
     );
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       paymentMethodTitle,
       shippingAddress,
       billingAddress: billingAddress || shippingAddress,
-      total,
+      totalAmount,
       orderItems: {
         create: items.map((item: OrderItem) => ({
           productId: item.id,

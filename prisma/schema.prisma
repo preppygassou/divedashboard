@@ -17,10 +17,15 @@ enum UserRole {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
+  firstName     String?
+  lastName      String?
+  profileImage  Json?
   email         String    @unique
   username      String    @unique
+  phone         String?       @unique // Optional phone number, unique across users
   password      String
+  addresses     UserAddress[]
+  birthday      DateTime?
   emailVerified DateTime?
   role          UserRole  @default(USER)
   createdAt     DateTime  @default(now())
@@ -32,6 +37,24 @@ model User {
   twoFactorConfirmation TwoFactorConfirmation?
 
   @@index([email])
+}
+
+model UserAddress {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        AddressType // Enum: BILLING or SHIPPING
+  street      String?
+  address1    String?
+  address2    String?
+  city        String
+  state       String
+  postcode    String
+  country     String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId])
 }
 
 model Account {
@@ -63,7 +86,7 @@ model Order {
   shippingAddress    Json?
   billingAddress      Json?
   trackingNumber String?
-  setPaid Boolean
+  setPaid Boolean @default(false)
   currency String?
   paymentMethod String?
   paymentMethodTitle String?
@@ -75,9 +98,9 @@ model Order {
   shippingTotal Float?,
   shippingTax Float?
   cartTax Float?
-  total Float?
+  totalAmount Float?
   totalTax Float?
-  pricesIncludeTax Boolean?
+  pricesIncludeTax Boolean? @default(false)
   customerNote String?
   datePaid DateTime?
   dateCompleted DateTime?
@@ -307,10 +330,6 @@ model ExperienceBooking {
   @@index([status])
 }
 
-enum Role {
-  USER
-  ADMIN
-}
 
 enum CardTier {
   plus
@@ -370,4 +389,9 @@ enum AttributeShape {
   square
   rounded
   circle  
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
 }
