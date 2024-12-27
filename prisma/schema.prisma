@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
@@ -16,23 +16,23 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  firstName     String?
-  lastName      String?
-  profileImage  Json?
-  email         String    @unique
-  username      String    @unique
-  phone         String?       @unique // Optional phone number, unique across users
-  password      String
-  addresses     UserAddress[]
-  birthday      DateTime?
-  emailVerified DateTime?
-  role          UserRole  @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  orders        Order[]
-  passCards     PassCard[]
+  id                    String                 @id @default(cuid())
+  firstName             String?
+  lastName              String?
+  profileImage          Json?
+  email                 String                 @unique
+  username              String                 @unique
+  phone                 String?                @unique // Optional phone number, unique across users
+  password              String
+  addresses             UserAddress[]
+  birthday              DateTime?
+  emailVerified         DateTime?
+  role                  UserRole               @default(USER)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  accounts              Account[]
+  orders                Order[]
+  passCards             PassCard[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 
@@ -40,19 +40,19 @@ model User {
 }
 
 model UserAddress {
-  id          String     @id @default(cuid())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        AddressType // Enum: BILLING or SHIPPING
-  street      String?
-  address1    String?
-  address2    String?
-  city        String
-  state       String
-  postcode    String
-  country     String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      AddressType // Enum: BILLING or SHIPPING
+  street    String?
+  address1  String?
+  address2  String?
+  city      String
+  state     String
+  postcode  String
+  country   String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   @@index([userId])
 }
@@ -77,59 +77,58 @@ model Account {
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  orderNumber     String      @unique
-  userId          String
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status          OrderStatus @default(pending)
-  orderItems      OrderItem[]
+  id                 String      @id @default(cuid())
+  orderNumber        String      @unique
+  userId             String
+  user               User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status             OrderStatus @default(pending)
+  orderItems         OrderItem[]
   shippingAddress    Json?
-  billingAddress      Json?
-  trackingNumber String?
-  setPaid Boolean @default(false)
-  currency String?
-  paymentMethod String?
+  billingAddress     Json?
+  trackingNumber     String?
+  setPaid            Boolean     @default(false)
+  currency           String?
+  paymentMethod      String?
   paymentMethodTitle String?
-  paymentStatus String?
-  transactionId String?
-  paymentIntentId String?
-  discountTotal Float?
-  discountTax Float?
-  shippingTotal Float?,
-  shippingTax Float?
-  cartTax Float?
-  totalAmount Float?
-  totalTax Float?
-  pricesIncludeTax Boolean? @default(false)
-  customerNote String?
-  datePaid DateTime?
-  dateCompleted DateTime?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  passCards       PassCard[]
+  paymentStatus      String?
+  transactionId      String?
+  paymentIntentId    String?
+  discountTotal      Float?
+  discountTax        Float?
+  shippingTotal      Float?
+  shippingTax        Float?
+  cartTax            Float?
+  totalAmount        Float?
+  totalTax           Float?
+  pricesIncludeTax   Boolean?    @default(false)
+  customerNote       String?
+  datePaid           DateTime?
+  dateCompleted      DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  passCards          PassCard[]
 
   @@index([userId])
   @@index([status])
 }
 
 model OrderItem {
-  id          String    @id @default(cuid())
+  id          String            @id @default(cuid())
   orderId     String
-  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId   String
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product     Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity    Int
-  variationId    String?          // Optional, for variations
-  variation      ProductVariation @relation(fields: [variationId], references: [id], onDelete: Cascade)
-  price       Float     // Price per unit at the time of order
-  totalPrice  Float     // Calculated as quantity * price
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  variationId String? // Optional, for variations
+  variation   ProductVariation? @relation("OrderItemToProductVariation", fields: [variationId], references: [id], onDelete: Cascade)
+  price       Float // Price per unit at the time of order
+  totalPrice  Float // Calculated as quantity * price
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   @@index([orderId])
   @@index([productId])
 }
-
 
 model VerificationToken {
   id      String   @id @default(cuid())
@@ -168,8 +167,8 @@ model TwoFactorConfirmation {
 }
 
 model PassCard {
-  id             String             @id @default(cuid())
-  cardNumber     String             @unique
+  id             String              @id @default(cuid())
+  cardNumber     String              @unique
   userId         String
   orderId        String
   status         PassCardStatus
@@ -178,10 +177,10 @@ model PassCard {
   validUntil     DateTime?
   divesRemaining Int?
   trackingNumber String?
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  order          Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order          Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
   bookings       ExperienceBooking[]
 
   @@index([userId])
@@ -190,31 +189,32 @@ model PassCard {
 }
 
 model Attribute {
-  id          String           @id @default(cuid())
-  name        String
-  slug        String          @unique
-  type        AttributeType    @default(default)
-  shape       AttributeShape   @default(default)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  switchers   Switcher[]
-  products    ProductAttribute[]
-  variations  ProductVariation[]
+  id         String             @id @default(cuid())
+  name       String
+  slug       String             @unique
+  type       AttributeType      @default(default)
+  shape      AttributeShape     @default(default)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  switchers  Switcher[]
+  products   ProductAttribute[]
+  variations ProductVariation[]
+
   @@index([slug])
   @@index([type])
 }
 
 model Switcher {
-  id          String    @id @default(cuid())
+  id          String             @id @default(cuid())
   name        String
-  slug        String    @unique
+  slug        String             @unique
   description String?
-  color String?
-  image       Json? 
+  color       String?
+  image       Json?
   attributeId String
-  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  attribute   Attribute          @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   products    ProductVariation[]
 
   @@index([slug])
@@ -236,68 +236,69 @@ model ProductAttribute {
 }
 
 model ProductVariation {
-  id               String    @id @default(cuid())
-  productId        String
-  attributeId      String
-  switcherId       String
-  featuredImage Json?
-  manageStock      Boolean   @default(false)
-  price            Float 
-  regularPrice     Float?
-  soldPrice        Float?
-  initialQuantity  Int?
+  id                String      @id @default(cuid())
+  productId         String
+  attributeId       String
+  switcherId        String
+  featuredImage     Json?
+  manageStock       Boolean     @default(false)
+  price             Float
+  regularPrice      Float?
+  soldPrice         Float?
+  initialQuantity   Int?
   availableQuantity Int?
-  soldQuantity     Int?
-  product          Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  switcher         Switcher  @relation(fields: [switcherId], references: [id], onDelete: Cascade)
-  attribute        Attribute @relation(fields: [attributeId], references: [id])
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  soldQuantity      Int?
+  orderItems        OrderItem[] @relation("OrderItemToProductVariation")
+  product           Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  switcher          Switcher    @relation(fields: [switcherId], references: [id], onDelete: Cascade)
+  attribute         Attribute   @relation(fields: [attributeId], references: [id])
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
-  @@unique([productId,attributeId, switcherId])
+  @@unique([productId, attributeId, switcherId])
   @@index([productId])
   @@index([attributeId])
   @@index([switcherId])
 }
 
 model Product {
-  id          String       @id @default(cuid())
-  name        String
-  description String
-  slug        String    @unique
-  featuredImage Json?
-  status ProductStatus @default(published)
-  individuallySell      Boolean   @default(true)
-  price       Float
-  regularPrice       Float?
-  soldPrice       Float?
-  initialQuantity       Int
-  availableQuantity       Int
-  soldQuantity       Int
-  tier        CardTier
-  images      Json[]      // Array of { id: string, url: string, alt: string, colorId?: string }
-  attributes  ProductAttribute[]
-  variations  ProductVariation[]
-  orders      OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id                String             @id @default(cuid())
+  name              String
+  description       String
+  slug              String             @unique
+  featuredImage     Json?
+  status            ProductStatus      @default(published)
+  individuallySell  Boolean            @default(true)
+  price             Float
+  regularPrice      Float?
+  soldPrice         Float?
+  initialQuantity   Int
+  availableQuantity Int
+  soldQuantity      Int
+  tier              CardTier
+  images            Json[] // Array of { id: string, url: string, alt: string, colorId?: string }
+  attributes        ProductAttribute[]
+  variations        ProductVariation[]
+  orders            OrderItem[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@index([id])
 }
 
 model Experience {
-  id             String             @id @default(cuid())
-  title          String            
-  description    String            
+  id             String              @id @default(cuid())
+  title          String
+  description    String
   location       String
   startDate      DateTime
   endDate        DateTime
   capacity       Int
   availableSpots Int
-  imageUrl       String?           
-  status         ExperienceStatus   @default(draft)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  imageUrl       String?
+  status         ExperienceStatus    @default(draft)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
   bookings       ExperienceBooking[]
   allowedTiers   ExperienceTier[]
 
@@ -329,7 +330,6 @@ model ExperienceBooking {
   @@index([passCardId])
   @@index([status])
 }
-
 
 enum CardTier {
   plus
@@ -388,7 +388,7 @@ enum AttributeShape {
   default
   square
   rounded
-  circle  
+  circle
 }
 
 enum AddressType {
