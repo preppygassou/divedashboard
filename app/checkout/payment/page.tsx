@@ -30,7 +30,7 @@ const PayementPage: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState<string>();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const { state, dispatch } = useStore();
   const [shippingPrice, setShippingPrice] = useState(0);
@@ -90,7 +90,7 @@ const PayementPage: React.FC = () => {
     }
   
     setLoading(true);
-    setErrorMessage(null); // Reset error state before proceeding
+    setErrorMessage(''); // Reset error state before proceeding
   
     // Ensure form submission via Elements is handled
     const { error: submitError } = await elements.submit();
@@ -143,11 +143,11 @@ const PayementPage: React.FC = () => {
         // Successfully updated the WooCommerce order
         window.location.href = `/checkout/success?order_id=${order}`; // Redirect to success page
           } else {
-        console.error('Failed to update WooCommerce order');
+  
         setErrorMessage('Une erreur s\'est produite lors de la mise à jour de la commande.');
           }
         } catch (error) {
-          console.error('WooCommerce order update error:', error);
+          
           setErrorMessage('Une erreur s\'est produite lors de la mise à jour de la commande.');
         }
       }
