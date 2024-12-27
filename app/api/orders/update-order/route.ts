@@ -4,7 +4,7 @@ import { db } from '@/lib/db'; // Adjust path based on your project setup
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { orderId,status,paymentStatus,transaction_id,paymentStatus } = await req.json();
+    const { orderId,status,paymentStatus,transaction_id } = await req.json();
 
      // Update the order in the database
      const updatedOrder = await db.order.update({

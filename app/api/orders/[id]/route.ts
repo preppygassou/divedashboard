@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db'; // Adjust path based on your project setup
 
 export async function PATCH(req: NextRequest,{ params }: { params: { id: string } }) {
-
+const id = params.id
   try {
     const { status} = await req.json();
 
      // Update the order in the database
      const updatedOrder = await db.order.update({
-      where: { params.id},
+      where: {id},
       data: {
         status, 
         updatedAt: new Date(),
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest,{ params }: { params: { id: string } 
   try {
     const order = await db.order.findUnique({
       where: {
-        params.id,
+        id:params.id,
       },
       include: {
         orderItems: {
