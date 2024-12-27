@@ -3,6 +3,33 @@
 import { db } from "@/lib/db"
 import { Prisma } from "@prisma/client"
 
+const groupVariationsByAttributes = (product) => {
+  const { attributes, variations } = product;
+
+  const attributesWithVariations = attributes.map((attr) => {
+    const attributeVariations = variations.filter(
+      (variation) => variation.attributeId === attr.attribute.id
+    );
+
+    return {
+      ...attr,
+      variations: attributeVariations,
+    };
+  });
+
+  return {
+    ...product,
+    attributes: attributesWithVariations,
+  };
+};
+
+
+export const getProductsWithGroupedVariations = async () => {
+  const products = await getProducts();
+  return products.map(groupVariationsByAttributes);
+};
+
+
 export const getProducts = async () => {
   try {
     return await db.product.findMany({

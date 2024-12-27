@@ -3,7 +3,7 @@ import { ProductDetails } from "@/components/product/product-details";
 import { notFound } from "next/navigation";
 import { CreditCard } from "lucide-react";
 import Link from "next/link";
-import { getProducts } from "@/lib/data/product";
+import { getProducts, getProductsWithGroupedVariations } from "@/lib/data/product";
 import Menu from "@/components/menu";
 
 interface ProductPageProps {
@@ -12,25 +12,6 @@ interface ProductPageProps {
   };
 }
 
-const groupVariationsByAttributes = (product) => {
-  const { attributes, variations } = product;
-
-  const attributesWithVariations = attributes.map((attr) => {
-    const attributeVariations = variations.filter(
-      (variation) => variation.attributeId === attr.attribute.id
-    );
-
-    return {
-      ...attr,
-      variations: attributeVariations,
-    };
-  });
-
-  return {
-    ...product,
-    attributes: attributesWithVariations,
-  };
-};
 
 export async function generateStaticParams() {
   const products = await getProducts();
@@ -38,10 +19,6 @@ export async function generateStaticParams() {
     tier,
   }));
 }
-export const getProductsWithGroupedVariations = async () => {
-  const products = await getProducts();
-  return products.map(groupVariationsByAttributes);
-};
 
 
 export default async function ProductPage({ params }: ProductPageProps) {
