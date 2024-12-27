@@ -81,7 +81,7 @@ const PayementPage: React.FC = () => {
 
     fetchPaymentIntent();
   }, []);
-// @ts-expect-error
+
   const handleSubmit = async (event: React.FormEvent) => {
     // @ts-ignore
     event.preventDefault();
