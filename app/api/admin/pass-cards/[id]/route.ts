@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import db from "@/lib/db/models";
+import { db } from '@/lib/db';
 
 export async function GET(
   req: Request,
@@ -13,15 +13,15 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const passCard = await db.PassCard.findByPk(params.id, {
+    const passCard = await db.passCard.findByPk(params.id, {
       include: [
         {
-          model: db.User,
+          model: db.user,
           as: 'user',
           attributes: ['name', 'email']
         },
         {
-          model: db.Order,
+          model: db.order,
           as: 'order'
         }
       ]
@@ -55,7 +55,7 @@ export async function PATCH(
     const body = await req.json();
     const { status, trackingNumber } = body;
 
-    const passCard = await db.PassCard.findByPk(params.id);
+    const passCard = await db.passCard.findByPk(params.id);
     if (!passCard) {
       return NextResponse.json({ error: "Pass card not found" }, { status: 404 });
     }
