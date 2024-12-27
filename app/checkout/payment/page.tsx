@@ -95,7 +95,7 @@ const PayementPage: React.FC = () => {
     // Ensure form submission via Elements is handled
     const { error: submitError } = await elements.submit();
     if (submitError) {
-      setErrorMessage(submitError.message);
+      setErrorMessage(submitError?.message||"");
       setLoading(false);
       return;
     }
