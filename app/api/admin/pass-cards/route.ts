@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/* import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from '@/lib/db';
 
@@ -81,4 +81,4 @@ function generateCardNumber(): string {
   const prefix = "PC";
   const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
   return `${prefix}${randomNumber}`;
-}
+} */
