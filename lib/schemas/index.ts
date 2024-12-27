@@ -6,7 +6,8 @@ import { AttributeType, AttributeShape } from "@prisma/client"
 
 export const SettingsSchema = z
   .object({
-    name: z.optional(z.string()),
+    firstName: z.optional(z.string()),
+    lastName: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
     role: z.string(),
     email: z.optional(z.string().email()),
@@ -69,8 +70,11 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, {
     message: "Minimum 6 characters required",
   }),
-  name: z.string().min(1, {
-    message: "Name is required",
+  firstName: z.string().min(1, {
+    message: "firstName is required",
+  }),
+  lastName: z.string().min(1, {
+    message: "lastName is required",
   }),
 });
 

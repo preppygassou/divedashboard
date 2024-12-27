@@ -15,7 +15,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Champs invalides" };
   }
 
-  const { email, password, name } = validatedFields.data;
+  const { email, password,  firstName,
+    lastName, } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
@@ -23,11 +24,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   if (existingUser) {
     return { error: "Email déjà utilisé !" };
   }
-  const username = generateUniqueUsername(name)
+  const username = generateUniqueUsername(firstName)
 
   await db.user.create({
     data: {
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       username,

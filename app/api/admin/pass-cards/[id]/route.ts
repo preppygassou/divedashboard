@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "@/auth";
 import { db } from '@/lib/db';
 
 export async function GET(
-  req: Request,
+  req: NextResponse,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -42,7 +42,7 @@ export async function GET(
 }
 
 export async function PATCH(
-  req: Request,
+  req: NextResponse,
   { params }: { params: { id: string } }
 ) {
   try {
