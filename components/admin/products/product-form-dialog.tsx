@@ -33,7 +33,7 @@ import { productSchema } from "@/lib/schemas/product"
 import { ImageUpload } from "./image-upload"
 import { AttributeFields } from "./attribute-fields"
 import { SwitcherFields } from "./switcher-fields"
-import { FeatureFields } from "./feature-fields"
+import { Attribute } from "@prisma/client"
 
 
 interface ProductFormDialogProps {
@@ -41,19 +41,22 @@ interface ProductFormDialogProps {
   onOpenChange: (open: boolean) => void
   onSubmit: (product: Product) => void
   product:Product
+  allAttributes:Attribute[]
 }
 
 export function ProductFormDialog({
   open,
   onOpenChange,
   onSubmit,
-  product
+  product,
+  allAttributes
 }: ProductFormDialogProps) {
    const form = useForm<Product>({
       resolver: zodResolver(productSchema),
       defaultValues: product || {
        /*  id: `product-${Date.now()}`, */
         name: "",
+        slug: "",
         description: "",
         price: 0,
         initialQuantity: 1,
@@ -61,7 +64,7 @@ export function ProductFormDialog({
         soldQuantity: 0,
         tier: "plus",
         featuredImage: {
-          url:"https://dive.paris/wp-content/uploads/2024/10/Group-676.png"
+          url:"https://dive.paris/wp-content/uploads/2024/11/Group-718.png"
           },
           /* attributes: [],
           variations: [], */
@@ -100,6 +103,7 @@ export function ProductFormDialog({
               </FormItem>
             )}
           />
+          
           <FormField
             control={form.control}
             name="tier"
@@ -126,7 +130,19 @@ export function ProductFormDialog({
             )}
           />
         </div>
-
+        <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Slug</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         <FormField
           control={form.control}
           name="price"
@@ -175,9 +191,22 @@ export function ProductFormDialog({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="featuredImage.url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>featuredImage URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <ImageUpload form={form} />
-        <AttributeFields form={form} />
+        <AttributeFields allAttributes={allAttributes} form={form} />
         <SwitcherFields form={form} />
         {/* <FeatureFields form={form} /> */}
 

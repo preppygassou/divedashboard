@@ -30,6 +30,7 @@ export type ProductSwitcher = {
 export interface Product {
   id: string;
   name: string;
+  slug: string;
   featuredImage: Object;
   description: string;
   price: number;

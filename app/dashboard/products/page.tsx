@@ -11,12 +11,14 @@ import { useToast } from "@/components/ui/use-toast"
 import { Product } from "@/lib/types/product"
 import { products as initialProducts } from "@/lib/data/products"
 import { createProduct, deleteProduct, getProducts, updateProduct } from "@/lib/data/product"
+import { getAttributes } from "@/lib/data/attribute"
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const { toast } = useToast()
   const [products, setProducts] = useState<Record<string, Product>>({})
+  const [allAttributes, setAllAttributes] = useState<Record<string, Product>>({})
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -24,6 +26,14 @@ export default function ProductsPage() {
       setProducts(fetchedProducts)
     }
     loadProducts()
+  }, [])
+
+  useEffect(() => {
+    const loadallAttributes = async () => {
+      const fetchedallAttributes = await getAttributes()
+      setAllAttributes(fetchedallAttributes)
+    }
+    loadallAttributes()
   }, [])
 
   const handleCreateProduct = async (product: Product) => {
@@ -82,7 +92,6 @@ export default function ProductsPage() {
     }
   }
 
-  console.log("products",products)
 
   return (
     <div className="space-y-6">
@@ -110,6 +119,7 @@ export default function ProductsPage() {
       </Card>
 
       <ProductFormDialog
+      allAttributes={allAttributes}
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         onSubmit={handleCreateProduct}

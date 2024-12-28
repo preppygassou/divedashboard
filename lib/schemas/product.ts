@@ -4,6 +4,7 @@ import { CardTier} from "@prisma/client"
 
 export const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
   featuredImage: z.object({url:z.string().url()}).optional(),
   description: z.string().min(1, "Description is required"),
   price: z.number().min(0, "Price must be positive"),
