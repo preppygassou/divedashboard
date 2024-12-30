@@ -11,12 +11,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
+    /* const session = await auth()
     
     if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-
+ */
     const attribute = await getAttributeById(params.id)
     
     if (!attribute) {
@@ -39,9 +39,9 @@ export async function PATCH(
   try {
     const session = await auth()
     
-   /*  if (!session || session.user.role !== "ADMIN") {
+    if (!session || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    } */
+    }
 
     const data = await req.json()
     const attribute = await updateAttribute(params.id, data)
