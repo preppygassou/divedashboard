@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+/* import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import {
   deleteAttribute,
@@ -11,12 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    /* const session = await auth()
-    
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
- */
+
     const attribute = await getAttributeById(params.id)
     
     if (!attribute) {
@@ -64,11 +59,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth()
-    
-    /* if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    } */
+
 
     const success = await deleteAttribute(params.id)
 
@@ -83,4 +74,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-}
+} */
