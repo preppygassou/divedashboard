@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+/* import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
@@ -11,15 +11,7 @@ export async function POST(req: NextRequest) {
       amount, // amount in cents
       currency, // e.g., 'usd'
       automatic_payment_methods: { enabled: true },
-      /* shipping: {
-        name: shippingDetails.name,
-        address: {
-          line1: shippingDetails.address,
-          city: shippingDetails.city,
-          postal_code: shippingDetails.postalCode,
-          country: shippingDetails.country,
-        },
-      }, */
+      
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
@@ -31,4 +23,13 @@ export async function POST(req: NextRequest) {
 
 export function OPTIONS() {
   return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
-}
+} */
+/* shipping: {
+        name: shippingDetails.name,
+        address: {
+          line1: shippingDetails.address,
+          city: shippingDetails.city,
+          postal_code: shippingDetails.postalCode,
+          country: shippingDetails.country,
+        },
+      }, */
