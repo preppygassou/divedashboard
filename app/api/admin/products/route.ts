@@ -1,4 +1,4 @@
-"use client"
+/* "use client"
 
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
@@ -6,12 +6,7 @@ import { createProduct, getProducts } from "@/lib/data/product"
 
 export async function GET() {
   try {
-    const session = await auth()
-    
-    /* if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    } */
-
+   
     const products = await getProducts()
     return NextResponse.json(products)
   } catch (error) {
@@ -47,4 +42,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-}
+} */
