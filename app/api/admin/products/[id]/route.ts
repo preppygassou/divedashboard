@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+/* import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { deleteProduct, getProductById, updateProduct } from "@/lib/data/product"
 
@@ -7,12 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    /* const session = await auth()
-    
-    if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    } */
-
+  
     const product = await getProductById(params.id)
     
     if (!product) {
@@ -79,4 +74,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-}
+} */
