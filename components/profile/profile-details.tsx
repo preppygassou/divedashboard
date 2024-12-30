@@ -28,10 +28,11 @@ export function ProfileDetails({ user }: ProfileDetailsProps) {
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user.name || "",
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
       email: user.email || "",
       phone: "",
-      address: "",
+      addresses: [],
     },
   })
 
@@ -59,10 +60,23 @@ export function ProfileDetails({ user }: ProfileDetailsProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="name"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Prénom</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nom</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -101,7 +115,7 @@ export function ProfileDetails({ user }: ProfileDetailsProps) {
 
         <FormField
           control={form.control}
-          name="address"
+          name="addresses"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Address</FormLabel>

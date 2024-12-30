@@ -26,46 +26,85 @@ import { ImageUpload } from "./image-upload"
 import { AttributeFields } from "./attribute-fields"
 import { SwitcherFields } from "./switcher-fields"
 import { FeatureFields } from "./feature-fields"
+import FileUpload from "./file-upload"
+import { Loader2 } from "lucide-react"
+import { useState } from "react"
+import { Attribute } from "@prisma/client"
 
 interface ProductFormProps {
   product?: Product
-  onSubmit: (product: Product) => void
+  allAttributes?: Attribute[]
+  onSubmit: (product: Product) => Promise<void>
+  setSelectedProduct:
+React.Dispatch<React.SetStateAction<Product | null>>
 }
 
-export function ProductForm({ product, onSubmit }: ProductFormProps) {
+export function ProductForm({ product, onSubmit, allAttributes,setSelectedProduct }: ProductFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const form = useForm<Product>({
     resolver: zodResolver(productSchema),
     defaultValues: product || {
-     /*  id: `product-${Date.now()}`, */
+      /*  id: `product-${Date.now()}`, */
       name: "",
+      slug: "",
       description: "",
       price: 0,
+      regularPrice: 0,
+      soldPrice: 0,
       initialQuantity: 1,
       availableQuantity: 1,
       soldQuantity: 0,
       tier: "plus",
       featuredImage: {
-        url:"https://dive.paris/wp-content/uploads/2024/10/Group-676.png"
-        },
-        /* attributes: [],
-        variations: [], */
-        images: [],
-     /*  
+        url: "https://dive.paris/wp-content/uploads/2024/11/Group-718.png"
+      },
+      /* attributes: [],
+      variations: [], */
       images: [],
-      attributes: [],
-      variations: [],
-      features: [], */
+      /*  
+       images: [],
+       attributes: [],
+       variations: [],
+       features: [], */
     },
   })
+  const [formErrors, setFormErrors] = useState<string | null>(null)
+
+  const onError = (errors) => {
+    console.error("Validation errors:", errors);
+  };
+  
   async function onSubmitIt(values: Product) {
     console.log("values", values)
-     //onSubmit(values)
+    try {
+      setIsSubmitting(true)
+      await onSubmit(values)
+      setSelectedProduct(null)
+    } catch (error) {
+      console.error("Failed to submit the form", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmitIt)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmitIt,onError)}
+        className="space-y-8">
+        <FormField
+          control={form.control}
+          name="featuredImage.url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>featured Image</FormLabel>
+              <FileUpload onChange={field.onChange} value={field.value} />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="grid gap-4 md:grid-cols-2">
+
+
           <FormField
             control={form.control}
             name="name"
@@ -79,6 +118,7 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="tier"
@@ -105,13 +145,76 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
             )}
           />
         </div>
-
+        <FormField
+          control={form.control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Slug</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="price"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Price (in cents)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="regularPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>RegularPrice (in cents)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="soldPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sold Price (in cents)</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="initialQuantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Initial Quantity (in cents)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -137,16 +240,30 @@ export function ProductForm({ product, onSubmit }: ProductFormProps) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="featuredImage.url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>featuredImage URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <ImageUpload form={form} />
-        <AttributeFields form={form} />
-        <SwitcherFields form={form} />
-        {/* <FeatureFields form={form} /> */}
-
-        <Button type="submit">
+        <AttributeFields allAttributes={allAttributes} form={form} />
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {product ? "Update Product" : "Create Product"}
         </Button>
       </form>
     </Form>
+
   )
 }

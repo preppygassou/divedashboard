@@ -8,19 +8,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState } from "react"
-import { ProductDetailsDialog } from "./product-details-dialog"
+
 import { Product } from "@/lib/types/product"
 import { ProductActions } from "./product-actions"
 import { ProductTierBadge } from "./product-tier-badge"
 import { ProductPrice } from "./product-price"
 import Image from "next/image"
+import { Attribute } from "@prisma/client"
 
 interface ProductsTableProps {
   products: Record<string, Product>
+  allAttributes: Attribute[]
   searchQuery: string
-  onUpdate: (product: Product) => void
+  onUpdate: (product: Product) => Promise<void>
   onDelete: (productId: string) => void
+  setSelectedProduct:
+React.Dispatch<React.SetStateAction<Product | null>>
 }
 
 export function ProductsTable({
@@ -28,9 +31,18 @@ export function ProductsTable({
   searchQuery,
   onUpdate,
   onDelete,
+  allAttributes,
+  setSelectedProduct
 }: ProductsTableProps) {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const productsList = Object.values(products)
+  const productsList = Object.values(products).map((product) => ({
+    ...product,
+    attributes: product.attributes
+      ? product.attributes.map((attr) => ({
+          ...attr.attribute,
+          switchers: allAttributes.length > 0 && allAttributes.find(a => a.id === attr.attribute.id)?.switchers || []
+        }))
+      : []
+  }))
 
   const filteredProducts = productsList.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -85,15 +97,15 @@ export function ProductsTable({
         </Table>
       </div>
 
-      <ProductDetailsDialog
+     {/*  <ProductDetailsDialog
+      allAttributes={allAttributes}
+        product={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
         product={selectedProduct}
         open={!!selectedProduct}
         onOpenChange={(open) => !open && setSelectedProduct(null)}
-        onSubmit={(product) => {
-          onUpdate(product)
-          setSelectedProduct(null)
-        }}
-      />
+        onSubmit={onUpdate}
+      /> */}
     </>
   )
 }

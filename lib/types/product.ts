@@ -1,14 +1,12 @@
 export type ProductAttribute = {
-  id: string;
-  name: string;
-  value: string;
+  id?: string;
+  name?: string;
 };
 
 export type ProductImage = {
-  id: string;
-  url: string;
-  alt: string;
-  colorId?: string;
+  id?: string;
+  url?: string;
+  alt?: string;
 };
 
 export type ProductColor = {
@@ -24,22 +22,34 @@ export type ProductSwitcher = {
   name: string;
   options: string[];
   selected: string;
-  colors?: ProductColor[];
+ 
+};
+
+export type ProductVariation = {
+  attributeId: string;
+  switcherId: string;
+  featuredImage?: string;
+  manageStock?: boolean;
+  price: number;
+  soldPrice?: number;
+  initialQuantity?: number;
+  availableQuantity: number;
+  soldQuantity?: number;
 };
 
 export interface Product {
-  id: string;
+  id?: string;
   name: string;
   slug: string;
   featuredImage: Object;
   description: string;
   price: number;
   availableQuantity: number;
-  soldQuantity: number;
-  initialQuantity: number;
+  soldQuantity?: number;
+  initialQuantity?: number;
   tier: 'plus' | 'ultra' | 'max';
-  images: ProductImage[];
-  attributes: ProductAttribute[];
-  variations: ProductSwitcher[];
-  /* features: string[]; */
+  images?: ProductImage[];
+  attributes?: ProductAttribute[];
+  variations?: ProductVariation[];
+
 }

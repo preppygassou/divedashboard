@@ -12,8 +12,8 @@ interface ProductFeaturedImageProps {
 export function ProductFeaturedImage({ featuredImage }: ProductFeaturedImageProps) {
 
   return (
-    <div className="space-y-4 bg-[#0B0B0B] w-full h-full md:h-screen">
-      <div className="relative aspect-square overflow-hidden rounded-lg">
+    <div className="flex items-center justify-center space-y-4 bg-[#0B0B0B] w-full h-full md:h-screen">
+      <div className="flex h-80 items-center justify-center relative aspect-square overflow-hidden rounded-lg">
       <Image
         src={featuredImage?.url}
         alt={featuredImage?.alt}

@@ -30,10 +30,12 @@ export function ProductDetails({ product }: ProductDetailsProps) {
 
   const addToCart = () => {
     const cartItem = {
-      product_id: product.id,
-      variation_id: selectedVariation?.switcher?.id,
-      variationName: selectedVariation?.switcher?.name,
-      variationFeaturedImage: selectedVariation?.switcher?.featuredImage,
+      productId: product.id,
+      variationId: selectedVariation?.variationId,
+      variationName: selectedVariation?.name,
+      attributeId: selectedVariation?.attributeId,
+      attributeName: selectedVariation?.attributeName,
+      variationFeaturedImage: selectedVariation?.featuredImage,
       price: Number(product.price),
       quantity: 1,
     };
@@ -41,6 +43,8 @@ export function ProductDetails({ product }: ProductDetailsProps) {
     router.push('/checkout/shipping');
     // Add your add to cart logic here
   }
+
+  console.log("selectedVariation",selectedVariation)
 
   return (
     <div className="grid gap-8 md:grid-cols-2 h-full">
@@ -63,7 +67,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             lineHeight: '129%', // 19.35px
           }}
         >
-          {selectedVariation?.availableQuantity ? selectedVariation?.availableQuantity + " " + "Pass Restant(s)" : "Out of Stock"}
+            {product?.availableQuantity ? product?.availableQuantity + " Pass Restant(s)" : "Rupture de stock"}
         </p>
         <h1
           className="text-2xl font-bold mb-2"

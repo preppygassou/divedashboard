@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { BarChart2, CreditCard, LayoutDashboard, Package, Users, ShoppingBag, ChevronDown } from "lucide-react";
+import { BarChart2, CreditCard, LayoutDashboard, Package, Users, ShoppingBag, ChevronDown,CreditCardIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,13 @@ const navigation = [
     name: 'Users', 
     href: '/dashboard/users',
     icon: Users,
+    type: 'link',
+    children: [],
+  },
+  { 
+    name: 'Pass cards', 
+    href: '/dashboard/pass-cards',
+    icon: CreditCardIcon,
     type: 'link',
     children: [],
   },
@@ -111,7 +118,7 @@ export default function AdminLayout({
                               key={subitem.name}
                               href={subitem.href}
                               className={cn(
-                                "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
+                                "group flex items-center rounded-md px-3 py-2 mt-1 text-sm font-medium",
                                 pathname === subitem.href
                                   ? "bg-primary text-primary-foreground"
                                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"

@@ -8,7 +8,7 @@ interface ProductAttributesProps {
   attributes: ProductAttribute[]
   variations: ProductSwitcher[]
   selectedVariation: ProductSwitcher
-  setselectedVariation: () => {}
+  setselectedVariation: (variation: ProductSwitcher) => void
 }
 
 export function ProductAttributes({ attributes, variations, selectedVariation, setselectedVariation }: ProductAttributesProps) {
@@ -37,41 +37,43 @@ export function ProductAttributes({ attributes, variations, selectedVariation, s
             {attribute?.variations?.length > 0 && (
               <div className="flex flex-wrap gap-3">
                 {attribute?.variations.map((variation) => (
-                  <button
+                    <button
                     key={variation.id}
+                    disabled={variation.availableQuantity < 1}
                     onClick={() => {
-                      setselectedVariation(variation.switcher);
-                      console.log(`Selected variation: ${variation?.switcher?.name}`);
+                      setselectedVariation({variationId:variation.id,variationPrice:variation.price,variationAvailableQuantity:variation.availableQuantity, featuredImage: variation.featuredImage,attributeName:attribute?.attribute?.name,...variation.switcher});
                     }}
+                    title={variation.availableQuantity < 1?"Rupture de stock":""}
                     className={cn(
                       "relative h-25 w-25 overflow-hidden",
                       "transition-all",
                       selectedVariation?.name === variation?.switcher?.name
-                        ? "border-2 border-[#F2F1F7] rounded-lg"
-                        : ""
+                      ? "border-2 border-[#F2F1F7] rounded-lg"
+                      : "",
+                      variation.availableQuantity < 1 ? "cursor-not-allowed opacity-50" : "cursor-pointer"
                     )}
-                  >
+                    >
                     {
                       attribute?.attribute?.type === "image" ?
-                        <Image
-                          src={
-                            variation?.switcher?.image?.url
-                          }
-                          alt={variation?.switcher?.name}
-                          width={126}
-                          height={121}
-                          className="shadow-md cursor-pointer transition-transform duration-300 hover:scale-105"
+                      <Image
+                      src={
+                      variation?.switcher?.image?.url
+                      }
+                      alt={variation?.switcher?.name}
+                      width={126}
+                      height={121}
+                      className="shadow-md transition-transform duration-300 hover:scale-105"
 
-                        /> : attribute?.attribute?.type === "color" ?
-                          <div
-                            className="absolute inset-0"
-                            style={{ background: variation?.switcher?.image?.color }}
-                          /> : <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 capitalize">
-                            {variation?.switcher?.name}
-                          </div>
+                      /> : attribute?.attribute?.type === "color" ?
+                      <div
+                      className="absolute inset-0"
+                      style={{ background: variation?.switcher?.image?.color }}
+                      /> : <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 capitalize">
+                      {variation?.switcher?.name}
+                      </div>
                     }
 
-                  </button>
+                    </button>
                 ))}
               </div>
             )}

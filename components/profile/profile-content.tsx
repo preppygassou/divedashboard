@@ -13,9 +13,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
   return (
     <Tabs defaultValue="details" className="mt-8">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="details">Profile Details</TabsTrigger>
-        <TabsTrigger value="pass">Pass Card</TabsTrigger>
-        <TabsTrigger value="orders">Orders</TabsTrigger>
+        <TabsTrigger value="details">Détails du profil</TabsTrigger>
+        <TabsTrigger value="pass">Pass cards</TabsTrigger>
+        <TabsTrigger value="orders">Commandes</TabsTrigger>
       </TabsList>
       <TabsContent value="details">
         <ProfileDetails user={user} />

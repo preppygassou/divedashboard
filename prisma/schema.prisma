@@ -32,6 +32,7 @@ model User {
   updatedAt             DateTime               @updatedAt
   accounts              Account[]
   orders                Order[]
+  experiences           Experience[]
   passCards             PassCard[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
@@ -264,11 +265,14 @@ model ProductVariation {
 model Product {
   id                String             @id @default(cuid())
   name              String
+  color             String?
   description       String
   slug              String             @unique
   featuredImage     Json?
+  shippingDetails   Json?
   status            ProductStatus      @default(published)
   individuallySell  Boolean            @default(true)
+  freeShipping      Boolean            @default(true)
   price             Float
   regularPrice      Float?
   soldPrice         Float?
@@ -297,6 +301,8 @@ model Experience {
   availableSpots Int
   imageUrl       String?
   status         ExperienceStatus    @default(draft)
+  organizerId    String // Added field
+  organizer      User                @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   bookings       ExperienceBooking[]
@@ -304,6 +310,7 @@ model Experience {
 
   @@index([status])
   @@index([startDate, endDate])
+  @@index([organizerId]) // Added index
 }
 
 model ExperienceTier {

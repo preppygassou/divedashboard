@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react"
 import { Card } from "@/components/ui/card"
-import { CreditCard } from "lucide-react"
 import Link from "next/link"
 import { ProfileHeader } from "@/components/profile/profile-header"
 import { ProfileContent } from "@/components/profile/profile-content"
@@ -18,12 +17,15 @@ export default function ProfilePage() {
     return null
   }
 
+
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <nav className="container mx-auto p-4">
         <Link href="/" className="flex items-center space-x-2">
-          <CreditCard className="h-8 w-8" />
-          <span className="text-2xl font-bold">Dive Card</span>
+          {/* <CreditCard className="h-8 w-8" />
+          <span className="text-2xl font-bold">Dive Card</span> */}
+          <img width={100} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" />
         </Link>
       </nav>
 

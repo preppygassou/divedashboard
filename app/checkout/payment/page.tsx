@@ -159,16 +159,16 @@ const PayementPage: React.FC = () => {
       } else {
         // Payment succeeded, update the WooCommerce order
         try {
-          const response = await axios.post('/api/woo/update-order', { orderId });
+          const response = await axios.post('/api/orders/update-order', { orderId });
           if (response.status === 200) {
             // Successfully updated the WooCommerce order
             window.location.href = '/checkout/success'; // Redirect to success page
           } else {
-            console.error('Failed to update WooCommerce order');
+            console.error('Failed to update order');
             setErrorMessage('Une erreur s\'est produite lors de la mise à jour de la commande.');
           }
         } catch (error) {
-          console.error('WooCommerce order update error:', error);
+          console.error('Order update error:', error);
           setErrorMessage('Une erreur s\'est produite lors de la mise à jour de la commande.');
         }
       }
@@ -189,7 +189,7 @@ const PayementPage: React.FC = () => {
       </div>
     );
   }
-
+console.log(state.cart)
 
   return (
     <CheckoutLayout>
@@ -198,21 +198,31 @@ const PayementPage: React.FC = () => {
         <div className="flex flex-col gap-20 md:flex-row">
           <div className="flex-1 space-y-[19px]">
             <div className="space-y-[19px]">
-              <div className="flex justify-center" style={{
+              <div className="flex h-80 items-center justify-center relative aspect-square overflow-hidden rounded-lg" /* style={{
                 width: '372', height: '223'
-              }}>
+              }} */>
 
 
                 {state?.cart && (
                   <Image
                     src={
-                      state.cart?.variationFeaturedImage
+                      state.cart?.variationFeaturedImage?.url
                     }
-                    alt={state.cart[0]?.variationName}
-                    width={372} height={223} className="max-w-60 h-auto transform rotate-90"
+                    fill
+        className="object-scale-down transform rotate-90" 
+        /* className="max-w-60 h-auto transform rotate-90" */
+        /* sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" */
+        priority
                   />
                 )}
               </div>
+              {
+                state?.cart?.attributeName&&<div className="flex justify-between">
+                <span className="text-[#1E1E1E]">{state?.cart?.attributeName}</span>
+                <span className="text-[#1E1E1E]">{state?.cart?.variationName}</span>
+              </div>
+              }
+              
               <div className="flex justify-between">
                 <span className="text-[#1E1E1E]">Total HT :</span>
                 <span className="text-[#1E1E1E]">{state?.cart?.price}€</span>

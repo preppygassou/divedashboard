@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
-import { CreditCard, ShoppingCart, User } from "lucide-react";
+import { Activity, ShoppingCart, User } from "lucide-react";
 /* import { useEffect, useState } from "react"; */
 import { Product } from "@/lib/types/product";
 import { getProducts } from "@/lib/data/product";
@@ -38,7 +38,7 @@ export default async function Home() {
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <nav className="container mx-auto p-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-        <svg width="108" height="14" viewBox="0 0 108 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* <svg width="108" height="14" viewBox="0 0 108 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M61.9961 0H68.0448C70.1137 0 71.728 0.521415 72.8877 1.56425C74.3241 2.84171 75.0423 4.62104 75.0423 6.90223C75.0423 9.26164 74.3702 11.0866 73.0261 12.3771C71.9059 13.459 70.2389 14 68.025 14H61.9961V0ZM65.6925 3.01117V10.9888H67.7285C68.8882 10.9888 69.7447 10.6955 70.2982 10.1089C70.9571 9.39199 71.2866 8.3622 71.2866 7.01955C71.2866 5.49441 70.8319 4.38641 69.9226 3.69553C69.3033 3.23929 68.4862 3.01117 67.4715 3.01117H65.6925Z" fill="#F2F1F7"/>
         <path d="M80.7108 0V14H77.0143V0H80.7108Z" fill="#F2F1F7"/>
         <path d="M95.2663 0L90.6606 14H86.4107L81.9236 0H85.798L87.0828 4.06704C87.8076 6.34823 88.3084 8.45996 88.5851 10.4022C88.8882 8.44693 89.3956 6.34171 90.1072 4.08659L91.392 0H95.2663Z" fill="#F2F1F7"/>
@@ -51,8 +51,8 @@ export default async function Home() {
             <stop offset="1" stop-color="#A3A3A3"/>
           </linearGradient>
         </defs>
-      </svg>
-          {/* <img width={150} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" /> */}
+      </svg> */}
+          <img width={100} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" />
         </div>
         <div className="flex items-center space-x-4">
          {/*  <Link href="/cart">
@@ -60,6 +60,13 @@ export default async function Home() {
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link> */}
+          {user?.role === 'ADMIN' && (
+            <Link href="/dashboard">
+              <Button variant="ghost" size="icon">
+                <Activity className="h-5 w-5" />
+              </Button>
+            </Link>
+          )}
           <Link href="/profile">
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
