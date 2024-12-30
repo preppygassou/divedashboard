@@ -1,4 +1,4 @@
-// app/api/update-order/route.ts
+/* // app/api/update-order/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db'; // Adjust path based on your project setup
 
@@ -47,3 +47,4 @@ export async function GET(req: NextRequest,{ params }: { params: { id: string } 
     return NextResponse.json({ message: 'Error fetching order', error }, { status: 500 });
   }
 }
+ */
