@@ -1,4 +1,4 @@
-/* "use client"
+"use client"
 
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
@@ -42,4 +42,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-} */
+}

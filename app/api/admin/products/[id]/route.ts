@@ -1,4 +1,4 @@
-/* import { NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { deleteProduct, getProductById, updateProduct } from "@/lib/data/product"
 
@@ -74,4 +74,4 @@ export async function DELETE(
       { status: 500 }
     )
   }
-} */
+}

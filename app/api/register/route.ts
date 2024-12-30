@@ -1,4 +1,4 @@
-/* import { NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { hash } from "bcryptjs"
 import { db } from "@/lib/db"
 
@@ -61,4 +61,4 @@ function generateUniqueUsername(name: string){
   let username = `${baseUsername}${Math.floor(Math.random() * 1000)}`;
 
   return username;
-} */
+}

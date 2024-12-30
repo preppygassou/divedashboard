@@ -1,4 +1,4 @@
-/* import { NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { createAttribute, getAttributes } from "@/lib/data/attribute"
 
@@ -40,4 +40,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-} */
+}
