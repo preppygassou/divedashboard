@@ -1,15 +1,10 @@
-import { NextResponse } from "next/server"
+/* import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { createAttribute, getAttributes } from "@/lib/data/attribute"
 
 export async function GET() {
   try {
-    const session = await auth()
     
-    /* if (!session || session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
- */
     const attributes = await getAttributes()
     return NextResponse.json(attributes)
   } catch (error) {
@@ -45,4 +40,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-}
+} */
