@@ -86,7 +86,7 @@ export function ProfileOrders({ user }: ProfileOrdersProps) {
                   size="icon"
                   asChild
                 >
-                  <Link href={`/orders/${order.id}`}>
+                  <Link href={`/profile/order/${order.id}`}>
                     <Eye className="h-4 w-4" />
                   </Link>
                 </Button>

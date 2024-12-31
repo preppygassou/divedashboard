@@ -46,7 +46,8 @@ const SettingsPage = () => {
     defaultValues: {
       password: undefined,
       newPassword: undefined,
-      name: user?.name || undefined,
+      firstName: user?.firstName || undefined,
+      lastName: user?.lastName || undefined,
       email: user?.email || undefined,
       role: user?.role || undefined,
       isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
@@ -81,14 +82,33 @@ const SettingsPage = () => {
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Prénom</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="John Doe"
+                        type="text"
+                        placeholder="John"
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nom</FormLabel>
+                    <FormControl>
+                      <Input
+                      type="text"
+                        {...field}
+                        placeholder="Doe"
                         disabled={isPending}
                       />
                     </FormControl>
