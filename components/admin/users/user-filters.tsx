@@ -11,18 +11,18 @@ import {
 import { User } from "@/lib/types/user"
 
 const statuses: User["status"][] = ["active", "inactive"]
-const roles: User["role"][] = ["user", "admin"]
+const roles: User["role"][] = ["USER", "ADMIN"]
 const tiers: NonNullable<User["cardTier"]>[] = ["basic", "pro", "elite"]
 
 export function UserFilters() {
   return (
     <div className="flex flex-col gap-4 p-4 border-b sm:flex-row">
-      <Select>
+     {/*  <Select>
         <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder="Filter by status" />
+          <SelectValue placeholder="Filtrer par statut" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Statuses</SelectItem>
+          <SelectItem value="all">Tous les statuts</SelectItem>
           {statuses.map((status) => (
             <SelectItem key={status} value={status} className="capitalize">
               {status}
@@ -30,13 +30,13 @@ export function UserFilters() {
           ))}
         </SelectContent>
       </Select>
-
+ */}
       <Select>
         <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder="Filter by role" />
+          <SelectValue placeholder="Filtrer par rôle" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Roles</SelectItem>
+          <SelectItem value="all">Tous les rôles</SelectItem>
           {roles.map((role) => (
             <SelectItem key={role} value={role} className="capitalize">
               {role}
@@ -44,14 +44,14 @@ export function UserFilters() {
           ))}
         </SelectContent>
       </Select>
-
+{/* 
       <Select>
         <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder="Filter by tier" />
+          <SelectValue placeholder="Filtrer par niveau" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Tiers</SelectItem>
-          <SelectItem value="none">No Card</SelectItem>
+          <SelectItem value="all">Tous les niveaux</SelectItem>
+          <SelectItem value="none">Pas de carte</SelectItem>
           {tiers.map((tier) => (
             <SelectItem key={tier} value={tier} className="capitalize">
               {tier}
@@ -59,11 +59,11 @@ export function UserFilters() {
           ))}
         </SelectContent>
       </Select>
-
-      <div className="flex gap-2 ml-auto">
-        <Button variant="outline">Export</Button>
-        <Button>Add User</Button>
-      </div>
+ */}
+      {/* <div className="flex gap-2 ml-auto">
+        <Button variant="outline">Exporter</Button>
+        <Button>Ajouter un utilisateur</Button>
+      </div> */}
     </div>
   )
 }

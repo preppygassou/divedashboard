@@ -96,7 +96,7 @@ export default async function Home() {
               </p>
               <Button className="w-full" asChild>
                 <Link href={`/passcard/${tier.tier}`}>
-                Learn More
+                En savoir plus
                 </Link>
               </Button>
               </div>

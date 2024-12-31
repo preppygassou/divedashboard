@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Camera } from "lucide-react"
 import { useState } from "react"
+import { LogoutButton } from "../auth/logout-button"
+import { ExitIcon } from "@radix-ui/react-icons"
 
 interface ProfileHeaderProps {
   user: any
@@ -47,8 +49,14 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         </label>
       </div>
       <div className="text-center">
-        <h1 className="text-2xl font-bold">{user.name}</h1>
+        <h1 className="text-2xl font-bold">{user.firstName} {user.lastName}</h1>
         <p className="text-muted-foreground">{user.email}</p>
+        <LogoutButton>
+            <Button variant="ghost" className="flex items-center">
+            <ExitIcon className="h-4 w-4 mr-2" />
+            Se déconnecter
+            </Button>
+        </LogoutButton>
       </div>
     </div>
   )

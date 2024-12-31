@@ -10,24 +10,14 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Eye } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { UserDetailsDialog } from "./user-details-dialog"
 import { User } from "@/lib/types/user"
 import { UserStatusBadge } from "./user-status-badge"
 import { UserRoleBadge } from "./user-role-badge"
 import { UserCardTier } from "./user-card-tier"
+import Loading from "@/components/global/loading"
 
-// Mock data - in a real app, this would come from your API
-const users: User[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `USR-${(1000 + i).toString()}`,
-  name: ["John Doe", "Jane Smith", "Mike Johnson", "Sarah Wilson", "Tom Brown"][Math.floor(Math.random() * 5)],
-  email: `user${i + 1}@example.com`,
-  status: Math.random() > 0.2 ? "active" : "inactive",
-  role: Math.random() > 0.8 ? "admin" : "user",
-  createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toISOString(),
-  lastLogin: new Date(Date.now() - Math.floor(Math.random() * 1000000000)).toISOString(),
-  cardTier: ["basic", "pro", "elite", undefined][Math.floor(Math.random() * 4)],
-}))
 
 interface UsersTableProps {
   searchQuery: string
@@ -35,11 +25,34 @@ interface UsersTableProps {
 
 export function UsersTable({ searchQuery }: UsersTableProps) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+ 
+useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch(`/api/users`)
+        const data = await response.json()
+        setUsers(data)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  const filteredUsers = users?.filter((user) =>
+    user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
+  if (loading) {
+    return <Loading/>
+  }
+
 
   return (
     <>
@@ -47,19 +60,19 @@ export function UsersTable({ searchQuery }: UsersTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Nom</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Card Tier</TableHead>
-              <TableHead>Last Login</TableHead>
+              <TableHead>Statut</TableHead>
+              <TableHead>Rôle</TableHead>
+              {/* <TableHead>Niveau de carte</TableHead> */}
+              <TableHead>Dernière connexion</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => (
+            {filteredUsers?.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <UserStatusBadge status={user.status} />
@@ -67,10 +80,10 @@ export function UsersTable({ searchQuery }: UsersTableProps) {
                 <TableCell>
                   <UserRoleBadge role={user.role} />
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   <UserCardTier tier={user.cardTier} />
-                </TableCell>
-                <TableCell>{new Date(user.lastLogin).toLocaleDateString()}</TableCell>
+                </TableCell> */}
+                <TableCell>{new Date(user?.lastLogin).toLocaleDateString()}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"

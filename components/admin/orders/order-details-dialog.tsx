@@ -31,7 +31,7 @@ export function OrderDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
-          <DialogTitle>Order Details</DialogTitle>
+          <DialogTitle>Détails de la commande</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -40,7 +40,7 @@ export function OrderDetailsDialog({
               value={status}
               onValueChange={setStatus}
             />
-            <Button>Update Status</Button>
+            <Button>Mettre à jour le statut</Button>
           </div>
 
           <OrderDetails order={{ ...order, status }} />

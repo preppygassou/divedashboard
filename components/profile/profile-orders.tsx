@@ -31,7 +31,7 @@ export function ProfileOrders({ user }: ProfileOrdersProps) {
         const data = await response.json()
         setOrders(data)
       } catch (error) {
-        console.error("Error fetching orders:", error)
+        console.error("Erreur lors de la récupération des commandes:", error)
       } finally {
         setLoading(false)
       }
@@ -48,7 +48,7 @@ export function ProfileOrders({ user }: ProfileOrdersProps) {
     return <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <CreditCard className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Pas de Pass commande Active</h3>
+            <h3 className="text-lg font-semibold mb-2">Pas de commande active</h3>
             <p className="text-muted-foreground text-center mb-6">
               Commencez avec une Pass card pour accéder à des lieux exclusifs.
             </p>
@@ -64,10 +64,10 @@ export function ProfileOrders({ user }: ProfileOrdersProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Order ID</TableHead>
+            <TableHead>ID de commande</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead>Statut</TableHead>
+            <TableHead>Montant</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>

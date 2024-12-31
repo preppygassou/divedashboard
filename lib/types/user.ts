@@ -1,9 +1,13 @@
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  status: 'active' | 'inactive';
-  role: 'user' | 'admin';
+  status: 'ACTIVE'|
+  'INACTIVE'|
+  'UNCONFIRMED'|
+  'SUSPENDED';
+  role: 'USER' | 'ADMIN';
   createdAt: string;
   lastLogin: string;
   cardTier?: 'basic' | 'pro' | 'elite';

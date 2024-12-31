@@ -21,10 +21,16 @@ export function OrderStatusSelect({ value, onValueChange }: OrderStatusSelectPro
         <SelectValue placeholder="Update status" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="pending">Pending</SelectItem>
-        <SelectItem value="processing">Processing</SelectItem>
-        <SelectItem value="completed">Completed</SelectItem>
-        <SelectItem value="cancelled">Cancelled</SelectItem>
+        <SelectItem value="pending">En attente</SelectItem>
+        <SelectItem value="processing">En cours</SelectItem>
+        <SelectItem value="completed">Terminé</SelectItem>
+        <SelectItem value="cancelled">Annulé</SelectItem>
+        <SelectItem value="refunded">Remboursé</SelectItem>
+        <SelectItem value="pending_production">En attente de production</SelectItem>
+        <SelectItem value="in_production">En production</SelectItem>
+        <SelectItem value="ready_to_ship">Prêt à expédier</SelectItem>
+        <SelectItem value="shipped">Expédié</SelectItem>
+        <SelectItem value="delivered">Livré</SelectItem>
       </SelectContent>
     </Select>
   )

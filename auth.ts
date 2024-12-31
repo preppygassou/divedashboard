@@ -22,35 +22,48 @@ export const {
     async linkAccount({ user }) {
       await db.user.update({
         where: { id: user.id },
-        data: { emailVerified: new Date() },
+        data: { emailVerified: new Date(),status:"ACTIVE" },
       });
     },
   },
   callbacks: {
-    async signIn({ user, account }) {
-      // Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
-
-      const existingUser = await getUserById(user.id);
-
-      // Prevent sign in without email verification
-      if (!existingUser?.emailVerified) return false;
-
-      // 2FA check
-      if (existingUser.isTwoFactorEnabled) {
+      async signIn({ user, account }) {
+        // Allow OAuth without email verification
+        if (account?.provider !== "credentials") {
+        // Update lastLogin for OAuth sign-ins
+        await db.user.update({
+          where: { id: user.id },
+          data: { lastLogin: new Date() }
+        });
+        return true;
+        }
+    
+        const existingUser = await getUserById(user.id);
+    
+        // Prevent sign in without email verification
+        if (!existingUser?.emailVerified) return false;
+    
+        // 2FA check
+        if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id
         );
-
+    
         if (!twoFactorConfirmation) return false;
-
+    
         // Delete the two factor confirmation for next sign in
         await db.twoFactorConfirmation.delete({
           where: { id: twoFactorConfirmation.id },
         });
-      }
-
-      return true;
+        }
+    
+        // Update lastLogin for credentials sign-in
+        await db.user.update({
+        where: { id: user.id },
+        data: { lastLogin: new Date() }
+        });
+    
+        return true;
     },
     async session({ token, session }) {
       if (token.sub && session.user) {

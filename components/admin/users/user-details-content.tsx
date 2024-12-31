@@ -17,7 +17,7 @@ export function UserDetailsContent({ user, status, role }: UserDetailsContentPro
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>{user.name}</span>
+          <span>{user.firstName} {user.lastName}</span>
           <div className="flex gap-2">
             <UserStatusBadge status={status} />
             <UserRoleBadge role={role} />
@@ -26,28 +26,28 @@ export function UserDetailsContent({ user, status, role }: UserDetailsContentPro
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="font-semibold mb-2">Contact Information</h3>
+          <h3 className="font-semibold mb-2">Informations de contact</h3>
           <div className="text-sm text-muted-foreground">
             <p>Email: {user.email}</p>
           </div>
         </div>
         <Separator />
         <div>
-          <h3 className="font-semibold mb-2">Card Details</h3>
+          <h3 className="font-semibold mb-2">Détails de la carte</h3>
           <div className="text-sm text-muted-foreground">
             {user.cardTier ? (
-              <p>Tier: {user.cardTier.charAt(0).toUpperCase() + user.cardTier.slice(1)}</p>
+              <p>Niveau: {user.cardTier.charAt(0).toUpperCase() + user.cardTier.slice(1)}</p>
             ) : (
-              <p>No active card</p>
+              <p>Aucune carte active</p>
             )}
           </div>
         </div>
         <Separator />
         <div>
-          <h3 className="font-semibold mb-2">Account Information</h3>
+          <h3 className="font-semibold mb-2">Informations sur le compte</h3>
           <div className="text-sm text-muted-foreground">
-            <p>Created: {new Date(user.createdAt).toLocaleDateString()}</p>
-            <p>Last Login: {new Date(user.lastLogin).toLocaleDateString()}</p>
+            <p>Créé: {new Date(user.createdAt).toLocaleDateString()}</p>
+            <p>Dernière connexion: {new Date(user.lastLogin).toLocaleDateString()}</p>
           </div>
         </div>
       </CardContent>

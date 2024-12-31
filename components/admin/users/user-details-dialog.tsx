@@ -29,8 +29,8 @@ export function UserDetailsDialog({
   open,
   onOpenChange,
 }: UserDetailsDialogProps) {
-  const [status, setStatus] = useState<User["status"]>(user?.status || "active")
-  const [role, setRole] = useState<User["role"]>(user?.role || "user")
+  const [status, setStatus] = useState<User["status"]>(user?.status || "ACTIVE")
+  const [role, setRole] = useState<User["role"]>(user?.role || "USER")
 
   if (!user) return null
 
@@ -38,7 +38,7 @@ export function UserDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
-          <DialogTitle>User Details</DialogTitle>
+          <DialogTitle>Détails de l'utilisateur</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -48,11 +48,11 @@ export function UserDetailsDialog({
               onValueChange={(value) => setStatus(value as User["status"])}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Update status" />
+                <SelectValue placeholder="Mettre à jour le statut" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="ACTIVE">Actif</SelectItem>
+                <SelectItem value="INATIVE">Inactif</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -60,14 +60,14 @@ export function UserDetailsDialog({
               onValueChange={(value) => setRole(value as User["role"])}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Update role" />
+                <SelectValue placeholder="Mettre à jour le rôle" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="USER">Utilisateur</SelectItem>
+                <SelectItem value="ADMIN">Administrateur</SelectItem>
               </SelectContent>
             </Select>
-            <Button>Update User</Button>
+            <Button>Mettre à jour l'utilisateur</Button>
           </div>
 
           <UserDetailsContent user={user} status={status} role={role} />

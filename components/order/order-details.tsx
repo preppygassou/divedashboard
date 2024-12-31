@@ -12,27 +12,28 @@ export function OrderDetails({ order }: OrderDetailsProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Order #{order.id}</span>
+          <span>Commande #{order?.orderNumber}</span>
           <OrderStatusBadge status={order.status} />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="font-semibold mb-2">Order Details</h3>
+          <h3 className="font-semibold mb-2">Détails de la commande</h3>
           <div className="text-sm text-muted-foreground">
-            <p>Tier: {order.tier.charAt(0).toUpperCase() + order.tier.slice(1)}</p>
-            <p>Amount: €{(order.amount / 100).toFixed(2)}</p>
+            {/* <p>Tier: {order.tier.charAt(0).toUpperCase() + order.tier.slice(1)}</p> */}
+            <p>Montant: €{(order.totalAmount / 100).toFixed(2)}</p>
             <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
         <Separator />
         <div>
-          <h3 className="font-semibold mb-2">Shipping Information</h3>
+          <h3 className="font-semibold mb-2">Informations de livraison</h3>
           <div className="text-sm text-muted-foreground">
-            <p>{order.shipping.name}</p>
-            <p>{order.shipping.address}</p>
-            <p>{order.shipping.city}, {order.shipping.postcode}</p>
-            <p>{order.shipping.country}</p>
+          <p>Nom: {order?.shippingAddress?.last_name} {order?.shippingAddress?.first_name}</p>
+          <p>Adresse: {order?.shippingAddress?.address}</p>
+          <p>Ville: {order?.shippingAddress?.city}</p>
+          <p>Code postal: {order?.shippingAddress?.postcode}</p>
+          <p>Pays: {order?.shippingAddress?.country}</p>
           </div>
         </div>
       </CardContent>

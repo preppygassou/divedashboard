@@ -10,9 +10,9 @@ interface UserStatusBadgeProps {
 export function UserStatusBadge({ status }: UserStatusBadgeProps) {
   return (
     <Badge
-      variant={status === "active" ? "default" : "secondary"}
+      variant={status === "ACTIVE" ? "default" : "secondary"}
       className={
-        status === "active"
+        status === "ACTIVE"
           ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
           : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
       }
