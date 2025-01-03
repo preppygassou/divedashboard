@@ -6,13 +6,19 @@ import { Camera } from "lucide-react"
 import { useState } from "react"
 import { LogoutButton } from "../auth/logout-button"
 import { ExitIcon } from "@radix-ui/react-icons"
-
+import { useFormState } from "react-dom";
+import { submitFormAction } from "@/actions/upload"
 interface ProfileHeaderProps {
   user: any
 }
 
+const initialState = {
+  url: '',
+}
+
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   const [avatarUrl, setAvatarUrl] = useState(user.image)
+  const [state, formAction] = useFormState(submitFormAction, initialState)
 
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState("");
@@ -70,7 +76,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <form action={formAction} className="flex flex-col items-center space-y-4">
       <div className="relative">
         <Avatar className="h-32 w-32">
           <AvatarImage src={avatarUrl} alt={user.name} />
@@ -103,12 +109,15 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         </LogoutButton>
       </div>
 
-      {/* <div>
+       <div>
       <h2>Upload File to S3-Compatible Storage via WordPress</h2>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={uploadToS3}>Upload</button>
+      <input type="file" name="file" id="file" /* onChange={handleFileChange} */ />
+      <button type="submit"/*  onClick={uploadToS3} */>Upload</button>
       <p>{status}</p>
-    </div> */}
-    </div>
+    </div> 
+    {state.url && (
+        <img src={state.url} alt={state.url} />
+      )}
+    </form>
   )
 }
