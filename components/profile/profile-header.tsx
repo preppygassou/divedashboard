@@ -14,6 +14,50 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   const [avatarUrl, setAvatarUrl] = useState(user.image)
 
+  const [file, setFile] = useState(null);
+  const [status, setStatus] = useState("");
+
+  const customEndpointUrl =
+    "/api/upload";
+  const authorizationHeader =
+    "Basic " + btoa("ninopreppy:QJnb 0iAy am4u DJOk hU7Z ITRj");
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const uploadToS3 = async () => {
+    if (!file) {
+      setStatus("Please select a file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(customEndpointUrl, {
+        method: "POST",
+        headers: {
+          Authorization: authorizationHeader,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("data",data)
+        setStatus(`File uploaded successfully! File URL: ${data.url}`);
+      } else {
+        const error = await response.json();
+        setStatus(`Upload failed: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setStatus("An error occurred while uploading the file.");
+    }
+  };
+
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -58,6 +102,13 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             </Button>
         </LogoutButton>
       </div>
+
+      {/* <div>
+      <h2>Upload File to S3-Compatible Storage via WordPress</h2>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={uploadToS3}>Upload</button>
+      <p>{status}</p>
+    </div> */}
     </div>
   )
 }
