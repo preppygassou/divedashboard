@@ -5,10 +5,10 @@ const multer = require('multer');
 // Configure your S3-compatible storage
 
 const s3 = new AWS.S3({
-  endpoint: process.env.AWS_ENDPOINT,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  endpoint: process.env.STORAGE_ENDPOINT,
+  accessKeyId: process.env.STORAGE_ACCESS_KEY_ID,
+  secretAccessKey: process.env.STORAGE_SECRET_ACCESS_KEY,
+  region: process.env.STORAGE_REGION,
   s3ForcePathStyle: true,  // Ensure path-style URL format (some S3-compatible services require this)
   signatureVersion: 'v4',
   httpOptions: {
@@ -20,7 +20,7 @@ const s3 = new AWS.S3({
 
 const storageMulterS3 = multerS3({
   s3: s3,
-  bucket: process.env.AWS_BUCKET_NAME, // Your S3 bucket name
+  bucket: process.env.STORAGE_BUCKET, // Your S3 bucket name
   acl: 'public-read', // File permissions (can be public or private)
   metadata: function (req, file, cb) {
     cb(null, { fieldName: file.fieldname });

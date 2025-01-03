@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { uploadMulterS3 } from '@/lib/storageMulterS3';
+import { uploadMulterS3 } from '@/lib/storage/storageMulterS3';
 import path from 'path';
 
 export async function POST(req: NextResponse) {
