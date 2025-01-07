@@ -1,29 +1,26 @@
-//import S3 from 'aws-sdk/clients/s3'
-
+import S3 from 'aws-sdk/clients/s3';
 import { IStorageProvider } from "../interface";
 import { CONFIG } from '@/s3.config';
 import { convertFileToBuffer } from '@/helpers/convert-file-to-buffer';
-import {S3} from  'aws-sdk';
 
 export class S3StorageProvider implements IStorageProvider {
-  client:S3
+  private client: S3;
 
   constructor() {
     this.client = new S3({
-      endpoint: CONFIG.providers.storage.endpoint, // Adicione o endpoint do Digital Ocean Spaces aqui
+      endpoint: CONFIG.providers.storage.endpoint,
       apiVersion: 'latest',
-      region: CONFIG.providers.storage.region, // Região pode ou não ser necessária, dependendo da configuração do seu espaço
+      region: CONFIG.providers.storage.region,
       accessKeyId: CONFIG.providers.storage.accessKeyId,
       secretAccessKey: CONFIG.providers.storage.secretAccessKey,
       signatureVersion: CONFIG.providers.storage.signatureVersion,
       s3ForcePathStyle: true,
-     /*  httpOptions: {
-      }, */
-    })
+    });
   }
 
   async upload(file: File): Promise<string> {
-    const fileBuffer = await convertFileToBuffer(file)
+    const fileBuffer = await convertFileToBuffer(file);
+    console.log("fileBuffer", fileBuffer);
 
     const params = {
       Bucket: CONFIG.providers.storage.bucket as string,
@@ -34,11 +31,10 @@ export class S3StorageProvider implements IStorageProvider {
 
     try {
       const response = await this.client.upload(params).promise();
-
-    console.log("response", response);
-    return response.Location;
+      console.log("response", response);
+      return response.Location;
     } catch (error) {
-      console.error('Upload error:', error);
+      console.log('Upload error:', error);
       throw new Error('Error uploading file');
     }
   }

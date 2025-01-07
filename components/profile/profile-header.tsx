@@ -44,9 +44,9 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     try {
       const response = await fetch(customEndpointUrl, {
         method: "POST",
-        headers: {
+       /*  headers: {
           Authorization: authorizationHeader,
-        },
+        }, */
         body: formData,
       });
 
@@ -76,7 +76,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   }
 
   return (
-    <form action={formAction} className="flex flex-col items-center space-y-4">
+    <div /* action={formAction} */ className="flex flex-col items-center space-y-4">
       <div className="relative">
         <Avatar className="h-32 w-32">
           <AvatarImage src={avatarUrl} alt={user.name} />
@@ -111,13 +111,13 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 
        <div>
       <h2>Upload File to S3-Compatible Storage via WordPress</h2>
-      <input type="file" name="file" id="file" /* onChange={handleFileChange} */ />
-      <button type="submit"/*  onClick={uploadToS3} */>Upload</button>
+      <input type="file" name="file" id="file" onChange={handleFileChange} />
+      <button /* type="submit" */ onClick={uploadToS3}>Upload</button>
       <p>{status}</p>
     </div> 
     {state.url && (
         <img src={state.url} alt={state.url} />
       )}
-    </form>
+    </div>
   )
 }
