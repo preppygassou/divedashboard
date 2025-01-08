@@ -26,7 +26,7 @@ export function AuthDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {defaultTab === "login" ? "Welcome Back" : "Create an Account"}
+            {defaultTab === "login" ? "Bon retour" : "Créer un compte"}
           </DialogTitle>
         </DialogHeader>
         <AuthForm onSuccess={onSuccess} defaultTab={defaultTab} />
