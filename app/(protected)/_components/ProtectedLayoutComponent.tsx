@@ -45,10 +45,10 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
   
       handleAuth();
     }, [router, pathname, search,isLoggedIn]); */
-    const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+        const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
         const isPublicRoute = publicRoutes.includes(pathname);
         const isAuthRoute = authRoutes.includes(pathname);
-        const isAdminRoute = pathname.startsWith('/admin');
+        const isAdminRoute = pathname.startsWith('/dashboard');
         const isCheckoutRoute = pathname.startsWith('/checkout');
   
         if (isApiAuthRoute) {
