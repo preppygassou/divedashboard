@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  hmg-card-dive-paris:
+    container_name: hmg-card-dive-paris
+    image: hmg-card-dive-paris
+    build:
+      context: .
+      dockerfile: Dockerfile.hmg
+    restart: always
+    stdin_open: true
+    env_file:
+      - .env 
+    volumes:
+      - ./logs:/app/logs # Optional: Map logs to the host
+    
