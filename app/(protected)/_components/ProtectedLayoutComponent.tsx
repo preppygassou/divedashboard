@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from '@/routes';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -12,7 +12,7 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
   
     const search = searchParams.get('search');
   
-   /*  useEffect(() => {
+    useEffect(() => {
       const handleAuth = async () => {
         
         const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
@@ -21,10 +21,7 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
         const isAdminRoute = pathname.startsWith('/admin');
         const isCheckoutRoute = pathname.startsWith('/checkout');
   
-        if (isApiAuthRoute) {
-          return;
-        }
-  
+      
         if (isAuthRoute && isLoggedIn) {
           router.replace(DEFAULT_LOGIN_REDIRECT);
           return;
@@ -44,8 +41,8 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
       };
   
       handleAuth();
-    }, [router, pathname, search,isLoggedIn]); */
-        const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+    }, [router, pathname, search,isLoggedIn]);
+        /* const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
         const isPublicRoute = publicRoutes.includes(pathname);
         const isAuthRoute = authRoutes.includes(pathname);
         const isAdminRoute = pathname.startsWith('/dashboard');
@@ -70,7 +67,7 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
           const callbackUrl = `${pathname}${search ? search : ""}`;
           router.replace(`/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
           return;
-        }
+        } */
   return (
     <>{children}</>
   )
