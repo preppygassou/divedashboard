@@ -27,6 +27,18 @@ export const {
     }
   },
   callbacks: {
+   /*  async redirect({ url, baseUrl }) {
+      // Here, you can check and validate the URL for trusted hosts
+      const allowedHosts = ['localhost:3000', 'https://card.dive.paris'];
+      const urlHost = new URL(url).host;
+
+      if (allowedHosts.includes(urlHost)) {
+        return url; // If the host is trusted, proceed with the redirect
+      }
+
+      // If the host is not trusted, redirect to a default location
+      return baseUrl; // You can define a safe URL to redirect to in case of an untrusted host
+    }, */
     async signIn ({ user, account }) {
       // Allow OAuth without email verification
       if (account?.provider !== 'credentials') {
@@ -38,7 +50,7 @@ export const {
         return true
       }
 
-      const existingUser = await getUserById(user.id)
+      const existingUser = await getUserById(user?.id)
 
       // Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false
@@ -75,19 +87,19 @@ export const {
       }
 
       if (session.user) {
-        session.user.firstName = token.firstName
-        session.user.lastName = token.lastName
-        session.user.profileImage = token.profileImage
-        session.user.phone = token.phone
-        session.user.email = token.email
-        session.user.username = token.username
+        session.user.firstName = token.firstName as string
+        session.user.lastName = token.lastName as string
+        session.user.profileImage = token.profileImage as object
+        session.user.phone = token.phone as string
+        session.user.email = token.email as string
+        session.user.username = token.username as string
         session.user.isOAuth = token.isOAuth as boolean
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
       }
 
       return session
     },
-    async jwt ({ token, user, session, profile }) {
+    async jwt ({ token }) {
       if (!token.sub) return token
 
       const existingUser = await getUserById(token.sub)

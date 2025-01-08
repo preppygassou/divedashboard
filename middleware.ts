@@ -11,7 +11,7 @@ export default auth((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-  const isAdminRoute = nextUrl.pathname.startsWith('/admin')
+  const isAdminRoute = nextUrl.pathname.startsWith('/dashboard')
   const isCheckoutRoute = nextUrl.pathname.startsWith('/checkout')
 
   //console.log(req.auth)

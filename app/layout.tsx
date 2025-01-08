@@ -10,8 +10,8 @@ import { StoreProvider } from "@/store";
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Dive Card - Premium Pass Cards',
-  description: 'Purchase and manage your dive pass cards with ease',
+  title: 'Carte de Plongée - Cartes de Pass Premium',
+  description: 'Achetez et gérez vos cartes de pass de plongée en toute simplicité',
 };
 
 export default async function RootLayout({
@@ -22,17 +22,20 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <SessionProvider session={session}>
-    <html lang="fr" suppressHydrationWarning>
-      <body className={inter.className}>
-      <StoreProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Toaster />
-        </ThemeProvider>
-        </StoreProvider>
-      </body>
-    </html>
+    <SessionProvider session={session} >
+      <html lang="fr" suppressHydrationWarning>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="ligth"
+            enableSystem>
+            <StoreProvider>
+              {children}
+              <Toaster />
+            </StoreProvider>
+          </ThemeProvider>
+        </body>
+      </html>
     </SessionProvider>
   );
 }
