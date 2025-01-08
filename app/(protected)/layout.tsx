@@ -1,16 +1,19 @@
-import { Navbar } from "./_components/navbar";
+import { redirect, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getSession } from "next-auth/react";
+import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
+import ProtectedLayoutComponent from "./_components/ProtectedLayoutComponent";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
 
-interface ProtectedLayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
 }
 
-const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
-  return (
-    <div className="h-full w-full flex flex-col gap-y-10 items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-500 to-blue-500">
-      <Navbar />
-      {children}
-    </div>
-  );
+const ProtectedLayout = async({ children }: LayoutProps) => {
+  const session = await auth(); // Fetch the session
+  const isLoggedIn = !!session;
+
+  return <ProtectedLayoutComponent isLoggedIn={isLoggedIn}>{children}</ProtectedLayoutComponent>;
 };
 
 export default ProtectedLayout;

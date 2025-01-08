@@ -6,82 +6,95 @@ import { Camera } from "lucide-react"
 import { useState } from "react"
 import { LogoutButton } from "../auth/logout-button"
 import { ExitIcon } from "@radix-ui/react-icons"
-import { useFormState } from "react-dom";
-import { submitFormAction } from "@/actions/upload"
-interface ProfileHeaderProps {
-  user: any
-}
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { useSession } from "next-auth/react"
+import { settings } from "@/actions/settings"
+import { FormError } from "../form-error"
+import { FormSuccess } from "../form-success"
+import Loading from "../global/loading"
+import { submitDeleteImageAction } from "@/actions/upload"
 
-const initialState = {
-  url: '',
-}
 
-export function ProfileHeader({ user }: ProfileHeaderProps) {
-  const [avatarUrl, setAvatarUrl] = useState(user.image)
-  const [state, formAction] = useFormState(submitFormAction, initialState)
+export function ProfileHeader() {
 
-  const [file, setFile] = useState(null);
-  const [status, setStatus] = useState("");
+  const user = useCurrentUser();
+
+  const { update } = useSession();
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [avatarUrl, setAvatarUrl] = useState(user?.profileImage?.url)
 
   const customEndpointUrl =
     "/api/upload";
-  const authorizationHeader =
-    "Basic " + btoa("ninopreppy:QJnb 0iAy am4u DJOk hU7Z ITRj");
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true)
+    const file = event.target.files?.[0]
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
 
-  const uploadToS3 = async () => {
-    if (!file) {
-      setStatus("Please select a file to upload.");
-      return;
-    }
+      if(avatarUrl){
+         await submitDeleteImageAction(user?.profileImage?.key)
+      }
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
       const response = await fetch(customEndpointUrl, {
         method: "POST",
-       /*  headers: {
-          Authorization: authorizationHeader,
-        }, */
         body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log("data",data)
-        setStatus(`File uploaded successfully! File URL: ${data.url}`);
-      } else {
-        const error = await response.json();
-        setStatus(`Upload failed: ${error.message}`);
-      }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setStatus("An error occurred while uploading the file.");
-    }
-  };
+        setAvatarUrl(data?.url)
 
-  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAvatarUrl(reader.result as string)
+        const newUser = {
+          password: undefined,
+          newPassword: undefined,
+          firstName: user?.firstName || undefined,
+          lastName: user?.lastName || undefined,
+          email: user?.email || undefined,
+          phone: user?.phone || undefined,
+          profileImage: data || undefined,
+          isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+
+        }
+
+        settings(newUser)
+          .then((data) => {
+            if (data.error) {
+              setError(data.error);
+              setLoading(false)
+            }
+
+            if (data.success) {
+              update();
+              setSuccess(data.success);
+              setLoading(false)
+              setError("")
+            }
+          })
+          .catch(() => {
+            setError("Quelque chose s'est mal passé!")
+            setLoading(false)
+          });
+
+      } else {
+        setLoading(false)
+        const error = await response.json();
+        setError(`Upload failed: ${error.message}`);
       }
-      reader.readAsDataURL(file)
     }
   }
 
   return (
-    <div /* action={formAction} */ className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4">
       <div className="relative">
         <Avatar className="h-32 w-32">
-          <AvatarImage src={avatarUrl} alt={user.name} />
+          <AvatarImage src={avatarUrl} alt={user?.firstName} />
           <AvatarFallback className="text-4xl">
-            {user.name?.split(" ").map((n: string) => n[0]).join("")}
+            {user && user?.firstName.split(" ").map((n: string) => n[0]).join("")}
           </AvatarFallback>
         </Avatar>
         <label
@@ -99,25 +112,19 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         </label>
       </div>
       <div className="text-center">
-        <h1 className="text-2xl font-bold">{user.firstName} {user.lastName}</h1>
-        <p className="text-muted-foreground">{user.email}</p>
+        {loading && <Loading />}
+        <h1 className="text-2xl font-bold">{user?.firstName} {user?.lastName}</h1>
+        <p className="text-muted-foreground">{user?.email}</p>
         <LogoutButton>
-            <Button variant="ghost" className="flex items-center">
+          <Button variant="ghost" className="flex items-center">
             <ExitIcon className="h-4 w-4 mr-2" />
             Se déconnecter
-            </Button>
+          </Button>
         </LogoutButton>
+        <FormError message={error} />
+        <FormSuccess message={success} />
       </div>
 
-       <div>
-      <h2>Upload File to S3-Compatible Storage via WordPress</h2>
-      <input type="file" name="file" id="file" onChange={handleFileChange} />
-      <button /* type="submit" */ onClick={uploadToS3}>Upload</button>
-      <p>{status}</p>
-    </div> 
-    {state.url && (
-        <img src={state.url} alt={state.url} />
-      )}
     </div>
   )
 }

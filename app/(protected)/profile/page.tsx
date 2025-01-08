@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react"
 import { Card } from "@/components/ui/card"
-import Link from "next/link"
 import { ProfileHeader } from "@/components/profile/profile-header"
 import { ProfileContent } from "@/components/profile/profile-content"
 import { Button } from "@/components/ui/button"
@@ -22,11 +21,9 @@ export default function ProfilePage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <nav className="container mx-auto p-4">
-        <Link href="/" className="flex items-center space-x-2">
-          {/* <CreditCard className="h-8 w-8" />
-          <span className="text-2xl font-bold">Dive Card</span> */}
+        <a href="/" className="flex items-center space-x-2">
           <img width={100} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" />
-        </Link>
+        </a>
       </nav>
 
       <div className="container mx-auto px-4 py-16">
@@ -47,11 +44,11 @@ export default function ProfilePage() {
           </Card>
         )}
 
-        <AuthDialog
+        {/* <AuthDialog
           open={showAuthDialog}
           onOpenChange={setShowAuthDialog}
           onSuccess={() => setShowAuthDialog(false)}
-        />
+        /> */}
       </div>
     </main>
   )

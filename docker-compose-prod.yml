@@ -1,0 +1,18 @@
+version: "3.7"
+
+networks:
+  nginxproxymanager_default:
+    name: nginxproxymanager_default
+    external: true
+
+services:
+  card-dive-paris:
+    container_name: card-dive-paris
+    image: card-dive-paris
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: always
+    stdin_open: true
+    networks:
+      - nginxproxymanager_default

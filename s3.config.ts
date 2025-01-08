@@ -1,7 +1,7 @@
 export const CONFIG = {
   providers: {
     storage: {
-      provider: 'n0c-storage',
+      provider: 'MINIO',
       endpoint: process.env.STORAGE_ENDPOINT,
       region: process.env.STORAGE_REGION,
       bucket: process.env.STORAGE_BUCKET,

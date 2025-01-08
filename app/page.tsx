@@ -61,17 +61,17 @@ export default async function Home() {
             </Button>
           </Link> */}
           {user?.role === 'ADMIN' && (
-            <Link href="/dashboard">
+            <a href="/dashboard">
               <Button variant="ghost" size="icon">
                 <Activity className="h-5 w-5" />
               </Button>
-            </Link>
+            </a>
           )}
-          <Link href="/profile">
+          <a href="/profile">
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
             </Button>
-          </Link>
+          </a>
         </div>
       </nav>
 

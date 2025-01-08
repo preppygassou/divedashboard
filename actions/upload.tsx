@@ -7,12 +7,23 @@ if (!storageProvider) {
   throw new Error("storageProvider is not defined");
 }
 
-export async function submitFormAction(prevState: any, formData: FormData) {
+export async function submitImageAction(prevState: any, formData: FormData) {
   const file = formData.get('file') as File
-  console.log("file",file)
-  const url = await storageProvider.upload(file)
+  const data = await storageProvider.upload(file)
   
-  return {
-    url
-  }
+  return data;
+}
+
+export async function submitDeleteImageAction(key:string) {
+
+  await storageProvider.delete(key)
+  
+}
+
+
+export async function submitProfileImageAction(prevState: any, formData: FormData) {
+  const file = formData.get('file') as File
+  const data = await storageProvider.upload(file)
+  
+  return data;
 }
