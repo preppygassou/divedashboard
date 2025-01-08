@@ -29,19 +29,11 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 py-16">
         {session ? (
           <Card className="max-w-4xl mx-auto p-6">
-            <ProfileHeader user={session.user} />
+            <ProfileHeader user={session.user}/>
             <ProfileContent user={session.user} />
           </Card>
         ) : (
-          <Card className="max-w-md mx-auto p-6 text-center">
-            <h1 className="text-2xl font-bold mb-4">Access Your Profile</h1>
-            <p className="text-muted-foreground mb-6">
-              Please log in or create an account to view your profile.
-            </p>
-            <Button onClick={() => setShowAuthDialog(true)}>
-              Login or Register
-            </Button>
-          </Card>
+          <></>
         )}
 
         {/* <AuthDialog

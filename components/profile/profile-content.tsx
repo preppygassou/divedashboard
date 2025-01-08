@@ -18,7 +18,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
         <TabsTrigger value="orders">Commandes</TabsTrigger>
       </TabsList>
       <TabsContent value="details">
-        <ProfileDetails user={user} />
+        <ProfileDetails  />
       </TabsContent>
       <TabsContent value="pass">
         <ProfilePassCard user={user} />
