@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY_APP01 }}
+          ARGS: '-rltgoDzvO --delete'
+          SOURCE: './*'
+          REMOTE_HOST: ${{ secrets.HOST_APP01 }}
+          REMOTE_USER: ${{ secrets.USER }}
+          TARGET: '/var/www/dev-card-dive-paris/'
+          REMOTE_PORT: 1338
+
+      - name: Run container
+        run: |
+          ssh -i /home/runner/.ssh/deploy_key* ${{ secrets.USER }}@${{ secrets.HOST_APP01 }} 'chmod +x /var/www/dev-card-dive-paris/run-app-deploy.sh'
+          ssh -i /home/runner/.ssh/deploy_key* ${{ secrets.USER }}@${{ secrets.HOST_APP01 }} 'cd /var/www/dev-card-dive-paris && ./run-app-deploy.sh --dev'
+
+      - name: Clean docker trash
+        run: |
+          ssh -i /home/runner/.ssh/deploy_key* ${{ secrets.USER }}@${{ secrets.HOST_APP01 }} 'docker image prune -f && docker volume prune -f && docker system prune -f'
