@@ -41,8 +41,8 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
       };
   
       handleAuth();
-    }, [router, pathname, search,isLoggedIn]); */
-    const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+    }, [router, pathname, search,isLoggedIn]); 
+   /*  const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
         const isPublicRoute = publicRoutes.includes(pathname);
         const isAuthRoute = authRoutes.includes(pathname);
         const isAdminRoute = pathname.startsWith('/dashboard');
@@ -67,7 +67,7 @@ const ProtectedLayoutComponent = ({children,isLoggedIn}) => {
           const callbackUrl = `${pathname}${search ? search : ""}`;
           router.replace(`/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
           return;
-        } */
+        }  */
   return (
     <>{children}</>
   )
