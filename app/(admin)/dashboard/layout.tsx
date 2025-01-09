@@ -6,41 +6,43 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import ThemeToggle from "@/components/layout/theme-toggle";
 
 const navigation = [
   {
-    name: 'Dashboard', 
+    name: 'Tableau de bord', 
     href: '/dashboard', 
     type: 'link',
     children: [],
     icon: LayoutDashboard 
   },
   { 
-    name: 'Analytics',
+    name: 'Analytique',
     href: '/dashboard/analytics', 
     icon: BarChart2,
     type: 'link',
     children: [],
   },
   { 
-    name: 'Orders', 
+    name: 'Commandes', 
     href: '/dashboard/orders', 
     icon: Package,
     type: 'link',
     children: [],
   },
   { 
-    name: 'Products', 
+    name: 'Produits', 
     href: '/dashboard/products', 
     icon: ShoppingBag,
     type: 'sub',
     children:[
-      { name: 'Products list', href: '/dashboard/products' },
-      { name: 'Attributes', href: '/dashboard/products/attributes' },
+      { name: 'Liste des produits', href: '/dashboard/products' },
+      { name: 'Attributs', href: '/dashboard/products/attributes' },
     ], 
   },
   { 
-    name: 'Users', 
+    name: 'Utilisateurs', 
     href: '/dashboard/users',
     icon: Users,
     type: 'link',
@@ -63,7 +65,7 @@ export default function AdminLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const pathname = usePathname();
-
+  const { theme} = useTheme();
   const toggleMenu = (menuName: string) => {
     setActiveMenu(activeMenu === menuName ? null : menuName);
   };
@@ -83,8 +85,10 @@ export default function AdminLayout({
         >
           <div className="flex h-full flex-1 flex-col border-r bg-card px-3 py-4">
             <div className="flex items-center gap-2 px-3 py-2">
-              <CreditCard className="h-6 w-6" />
-              <span className="text-lg font-semibold">Dive Card Admin</span>
+            <a href="/dashboard"><img width={100} src={theme==="light" ?"https://dive.paris/wp-content/uploads/2024/10/DIVE_2025-b.webp":"https://dive.paris/wp-content/uploads/2024/12/DIVE_2025.png"} />
+            <span className="text-lg font-semibold">DASH</span>
+            </a>
+              
             </div>
             <nav className="flex-1 space-y-1 py-4">
               {navigation.map((item) => {
@@ -168,7 +172,9 @@ export default function AdminLayout({
               >
                 <LayoutDashboard className="h-5 w-5" />
               </Button>
+              <ThemeToggle />
             </div>
+           
           </div>
           <div className="p-6">{children}</div>
         </main>

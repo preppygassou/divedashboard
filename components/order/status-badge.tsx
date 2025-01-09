@@ -15,7 +15,10 @@ export function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
 
   return (
     <Badge variant="secondary" className={variants[status]}>
-      {status.charAt(0).toUpperCase() + status.slice(1)}
+      {status === 'pending' && 'En attente'}
+      {status === 'processing' && 'En cours'}
+      {status === 'completed' && 'Terminé'}
+      {status === 'cancelled' && 'Annulé'}
     </Badge>
   )
 }

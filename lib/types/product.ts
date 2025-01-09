@@ -6,7 +6,10 @@ export type ProductAttribute = {
 export type ProductImage = {
   id?: string;
   url?: string;
-  alt?: string;
+  name?: string;
+  key?: string;
+  etag?: string;
+  alternative_text?: string;
 };
 
 export type ProductColor = {

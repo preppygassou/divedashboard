@@ -22,10 +22,10 @@ export function ProductFilters({ onCreateNew }: ProductFiltersProps) {
     <div className="flex flex-col gap-4 p-4 border-b sm:flex-row">
       <Select>
         <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder="Filter by tier" />
+          <SelectValue placeholder="Filtrer par niveau" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Tiers</SelectItem>
+          <SelectItem value="all">Tous les niveaux</SelectItem>
           {tiers.map((tier) => (
             <SelectItem key={tier} value={tier} className="capitalize">
               {tier}
@@ -37,7 +37,7 @@ export function ProductFilters({ onCreateNew }: ProductFiltersProps) {
       <div className="flex gap-2 ml-auto">
         <Button onClick={onCreateNew}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Product
+          Ajouter un produit
         </Button>
       </div>
     </div>

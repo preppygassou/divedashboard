@@ -1,5 +1,4 @@
 import { currentUser } from "@/lib/auth";
-import { redirect } from 'next/navigation'
 import Unauthorized from '@/components/unauthorized'
 
 interface ProtectedRouteLayoutProps {
@@ -9,10 +8,6 @@ interface ProtectedRouteLayoutProps {
 const AminRouteLayout = async ({ children }: ProtectedRouteLayoutProps) => {
 
   const user = await currentUser() 
-
-  if (!user) {
-    return redirect('/')
-  }
 
   const getAdminPermission = async () => {
      const session = user

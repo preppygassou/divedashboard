@@ -103,7 +103,7 @@ export function OrdersTable({ searchQuery }: OrdersTableProps) {
               <TableCell>
                 <OrderStatusBadge status={order.status as any} />
               </TableCell>
-              <TableCell>€{(order.totalAmount / 100).toFixed(2)}</TableCell>
+              <TableCell>€{(order.totalAmount).toFixed(2)}</TableCell>
               <TableCell className="text-right">
                   <OrderActions onView={() => setSelectedOrder(order)} />
                 </TableCell>

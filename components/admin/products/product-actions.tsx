@@ -26,15 +26,15 @@ export function ProductActions({ onView, onEdit, onDelete }: ProductActionsProps
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onView}>
           <Eye className="mr-2 h-4 w-4" />
-          View
+          Voir
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit
+          Modifier
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onDelete} className="text-destructive">
           <Trash className="mr-2 h-4 w-4" />
-          Delete
+          Supprimer
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

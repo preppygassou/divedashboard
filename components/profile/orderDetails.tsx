@@ -6,6 +6,8 @@ import { Activity, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import LoadingPage from "@/app/loading";
+import { OrderStatusBadge } from "../order/status-badge";
 
 interface OrderDetailsProps {
   orderId: string;
@@ -34,35 +36,10 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
     fetchOrder();
   }, [orderId]);
 
-  if (loading) return <Loading />;
+  if (loading) return <LoadingPage />;
   if (!order) return <p>Commande non trouvée.</p>;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
-      <nav className="container mx-auto p-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2">
-          <img width={100} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" />
-        </Link>
-        <div className="flex items-center space-x-4">
-          {/*  <Link href="/cart">
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-          </Link> */}
-          {user?.role === 'ADMIN' && (
-            <Link href="/dashboard">
-              <Button variant="ghost" size="icon">
-                <Activity className="h-5 w-5" />
-              </Button>
-            </Link>
-          )}
-          <Link href="/profile">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </nav>
       <div className="p-6 max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Détails de la commande</h1>
 
@@ -71,8 +48,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
           <h2 className="text-lg font-semibold">Résumé de la commande</h2>
           <p>ID de la commande: {order?.id}</p>
           <p>Date de la commande: {new Date(order?.createdAt).toLocaleDateString()}</p>
-          <p>Statut: <span className="font-medium">{order?.status}</span></p>
-          <p>Total: ${order?.totalAmount.toFixed(2)}</p>
+          <p>Statut: <OrderStatusBadge status={order.status as any} /></p>
+          <p>Total: €{order?.totalAmount.toFixed(2)}</p>
         </div>
 
         {/* Product List */}
@@ -116,9 +93,6 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ orderId }) => {
           {/* <p>ID de transaction: {order?.transactionId}</p> */}
         </div>
       </div>
-
-    </main>
-
   );
 };
 

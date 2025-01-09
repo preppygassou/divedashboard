@@ -56,10 +56,10 @@ export function ProductsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Image</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Tier</TableHead>
-              <TableHead>Price</TableHead>
-              {/* <TableHead>Features</TableHead> */}
+              <TableHead>Nom</TableHead>
+              <TableHead>Niveau</TableHead>
+              <TableHead>Prix</TableHead>
+              {/* <TableHead>Fonctionnalités</TableHead> */}
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>

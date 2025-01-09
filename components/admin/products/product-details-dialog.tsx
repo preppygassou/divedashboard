@@ -34,7 +34,7 @@ export function ProductDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle>Modifier le produit</DialogTitle>
         </DialogHeader>
         <ProductForm allAttributes={allAttributes} product={product} onSubmit={onSubmit} setSelectedProduct={setSelectedProduct}/>
       </DialogContent>

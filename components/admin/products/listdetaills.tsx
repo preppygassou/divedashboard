@@ -38,13 +38,13 @@ export default function ProductsListPage({allAttributes,fetchedProducts}:{allAtt
       setProducts(updatedProducts)
       setIsCreateDialogOpen(false)
       toast({
-        title: "Product created",
-        description: `${product.name} has been created successfully.`,
+        title: "Produit créé",
+        description: `${product.name} a été créé avec succès.`,
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to create product",
+        title: "Erreur",
+        description: "Échec de la création du produit",
         variant: "destructive",
       })
     }
@@ -56,13 +56,13 @@ export default function ProductsListPage({allAttributes,fetchedProducts}:{allAtt
       const updatedProducts = await getProducts()
       setProducts(updatedProducts)
       toast({
-        title: "Product updated",
-        description: `${product.name} has been updated successfully.`,
+        title: "Produit mis à jour",
+        description: `${product.name} a été mis à jour avec succès.`,
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update product",
+        title: "Erreur",
+        description: "Échec de la mise à jour du produit",
         variant: "destructive",
       })
     }
@@ -70,25 +70,25 @@ export default function ProductsListPage({allAttributes,fetchedProducts}:{allAtt
 
   const handleDeleteProduct = async (productId: string) => {
     try {
-      // Show global loading indicator
+      // Afficher l'indicateur de chargement global
       setIsLoading(true)
       
       await deleteProduct(productId)
       const updatedProducts = await getProducts()
       setProducts(updatedProducts)
       toast({
-        title: "Product deleted",
-        description: "Product has been deleted successfully.",
+        title: "Produit supprimé",
+        description: "Le produit a été supprimé avec succès.",
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to delete product",
+        title: "Erreur",
+        description: "Échec de la suppression du produit",
         variant: "destructive",
       })
       setIsLoading(false)
     } finally {
-      // Hide global loading indicator
+      // Masquer l'indicateur de chargement global
       setIsLoading(false)
     }
   }
@@ -97,11 +97,11 @@ console.log("selectedProduct",selectedProduct)
   return (
     <div className="relative space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      <h1 className="text-2xl font-bold">Products Management</h1>
+      <h1 className="text-2xl font-bold">Gestion des produits</h1>
       <div className="relative w-full md:w-72">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-        placeholder="Search products..."
+        placeholder="Rechercher des produits..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="pl-8"

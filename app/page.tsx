@@ -6,39 +6,16 @@ import { Activity,  User } from "lucide-react";
 import { getProducts } from "@/lib/data/product";
 import { currentUser } from "@/lib/auth";
 import Image from "next/image";
+import Header from "@/components/header";
 
 export default async function Home() {
 
         const fetchedProducts = await getProducts()
-        const user = await currentUser();
+        const user = currentUser();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
-      <nav className="container mx-auto p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <img width={100} src="https://dive.paris/wp-content/uploads/2024/12/DIVE_2025-1024x413.png" />
-        </div>
-        <div className="flex items-center space-x-4">
-         {/*  <Link href="/cart">
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-          </Link> */}
-          {user?.role === 'ADMIN' && (
-            <a href="/dashboard">
-              <Button variant="ghost" size="icon">
-                <Activity className="h-5 w-5" />
-              </Button>
-            </a>
-          )}
-          <a href="/profile">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
-          </a>
-        </div>
-      </nav>
-
+      <Header/>
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4">Trois possibilités</h1>

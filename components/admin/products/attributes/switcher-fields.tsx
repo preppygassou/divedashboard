@@ -8,6 +8,7 @@ import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/for
 import { Plus, Trash, ImagePlus } from "lucide-react"
 import { AttributeType } from "@prisma/client"
 import { v4 } from 'uuid'
+import FileUpload from "../file-upload"
 
 interface SwitcherFieldsProps {
   form: UseFormReturn<any>
@@ -22,9 +23,8 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
     form.setValue("switchers", [
       ...currentSwitchers,
       {
-        /* id: `new-${Date.now()}`, */
         name: "",
-        image: attributeType === AttributeType.image ? { url: "https://dive.paris/wp-content/uploads/woocommerce-placeholder-300x300.png" } : undefined,
+        image: attributeType === AttributeType.image ? { url: "" } : undefined,
         slug: "",
         description: "",
       },
@@ -33,8 +33,8 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
 
   const removeSwitcher = (index: number) => {
     const currentSwitchers = form.getValues("switchers")
-    const filters= currentSwitchers.filter((_, i) => i !== index)
-    form.setValue("switchers",filters)
+    const filters = currentSwitchers.filter((_, i) => i !== index)
+    form.setValue("switchers", filters)
   }
 
   return (
@@ -64,7 +64,7 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <Input
-                    placeholder="Name"
+                    placeholder="Nom"
                     {...form.register(`switchers.${index}.name`)}
                   />
                   <Input
@@ -81,20 +81,21 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
                 {attributeType === AttributeType.image && (
                   <div className="space-y-2">
                     <Input
-                      placeholder="Image URL"
+                      placeholder="URL de l'image"
                       {...form.register(`switchers.${index}.image.url`)}
                     />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => {
-                        // Image upload logic
-                      }}
-                    >
-                      <ImagePlus className="mr-2 h-4 w-4" />
-                      Upload Image
-                    </Button>
+                    <FormField
+                      control={form.control}
+                      {...form.register(`switchers.${index}.image`)}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Image en vedette</FormLabel>
+                          <FileUpload onChange={field.onChange} data={field.value} value={field.value?.url} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                   </div>
                 )}
               </div>
@@ -107,7 +108,7 @@ export function SwitcherFields({ form }: SwitcherFieldsProps) {
               onClick={addSwitcher}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Switcher
+              Ajouter un switcher
             </Button>
           </div>
           <FormMessage />

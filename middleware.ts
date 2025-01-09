@@ -55,12 +55,6 @@ export default auth((req) => {
     );
   }
 
-  if (isAdminRoute) {
-    if (req.auth?.user?.role !== "ADMIN") {
-      return Response.redirect(new URL('/', nextUrl))
-    }
-  }
-
   return null
 })
 

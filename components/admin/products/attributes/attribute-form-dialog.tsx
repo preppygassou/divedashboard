@@ -39,7 +39,7 @@ interface AttributeFormDialogProps {
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void
   onSubmit?: () => void
-  setAttributes
+  setAttributes:any[]
 }
 
 export function AttributeFormDialog({
@@ -108,8 +108,8 @@ values.switchers = switchers
       const updatedAttributes = await getAttributes()
       setAttributes(updatedAttributes)
       toast({
-        title: `Attribute ${attribute ? 'updated' : 'created'} successfully`,
-        description: `The attribute has been ${attribute ? 'updated' : 'created'}.`,
+        title: `Attribut ${attribute ? 'mis à jour' : 'créé'} avec succès`,
+        description: `L'attribut a été ${attribute ? 'mis à jour' : 'créé'}.`,
       })
       
       onSuccess?.()
@@ -118,8 +118,8 @@ values.switchers = switchers
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: `Failed to ${attribute ? 'update' : 'create'} attribute. Please try again.`,
+        title: "Erreur",
+        description: `Échec de ${attribute ? 'la mise à jour' : 'la création'} de l'attribut. Veuillez réessayer.`,
       })
     } finally {
       setIsSubmitting(false)
@@ -132,7 +132,7 @@ values.switchers = switchers
       <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen">
         <DialogHeader>
           <DialogTitle>
-            {attribute ? "Edit Attribute" : "Create Attribute"}
+            {attribute ? "Modifier l'attribut" : "Créer un attribut"}
           </DialogTitle>
         </DialogHeader>
 
@@ -144,9 +144,9 @@ values.switchers = switchers
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Nom</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter attribute name" />
+                      <Input {...field} placeholder="Entrez le nom de l'attribut" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,7 +160,7 @@ values.switchers = switchers
                   <FormItem>
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="enter-slug-here" />
+                      <Input {...field} placeholder="entrez-le-slug-ici" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -181,7 +181,7 @@ values.switchers = switchers
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
+                          <SelectValue placeholder="Sélectionnez le type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -206,14 +206,14 @@ values.switchers = switchers
                 name="shape"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Shape</FormLabel>
+                    <FormLabel>Forme</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select shape" />
+                          <SelectValue placeholder="Sélectionnez la forme" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -243,13 +243,13 @@ values.switchers = switchers
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                Cancel
+                Annuler
               </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {attribute ? "Update" : "Create"} Attribute
+                {attribute ? "Mettre à jour" : "Créer"} Attribut
               </Button>
             </div>
           </form>
