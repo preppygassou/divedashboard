@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { PassCard } from "@/lib/types/pass-card"
+import { Plus } from "lucide-react"
 
 const statuses: PassCard["status"][] = [
   "pending_production",
@@ -21,6 +22,9 @@ const statuses: PassCard["status"][] = [
   "cancelled"
 ]
 
+interface PassCardFiltersProps {
+  onCreateNew: () => void
+}
 const tiers: PassCard["tier"][] = ["dive_plus", "dive_ultra", "dive_max"]
 
 const tierNames = {
@@ -29,7 +33,7 @@ const tierNames = {
   dive_max: "Dive Max"
 }
 
-export function PassCardFilters() {
+export function PassCardFilters({ onCreateNew }: PassCardFiltersProps) {
   return (
     <div className="flex flex-col gap-4 p-4 border-b sm:flex-row">
       <Select>
@@ -61,6 +65,10 @@ export function PassCardFilters() {
       </Select>
 
       <div className="flex gap-2 ml-auto">
+      <Button onClick={onCreateNew}>
+          <Plus className="mr-2 h-4 w-4" />
+          Ajouter un Pass Card
+        </Button>
         <Button variant="outline">Export</Button>
         <Button variant="outline">Print Cards</Button>
       </div>

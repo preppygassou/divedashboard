@@ -20,16 +20,14 @@ interface PassCardsTableProps {
   searchQuery: string
 }
 
-export function PassCardsTable({ searchQuery }: PassCardsTableProps) {
-  const [selectedCard, setSelectedCard] = useState<PassCard | null>(null)
+export function PassCardsTable({ searchQuery,passCards,setSelectedPassCard,selectedPassCard }: PassCardsTableProps) {
+
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isUpdateOpen, setIsUpdateOpen] = useState(false)
   const [isShipmentOpen, setIsShipmentOpen] = useState(false)
 
-  // Mock data - replace with API call
-  const passCards: PassCard[] = []
 
-  const filteredCards = passCards.filter((card) =>
+  const filteredCards = passCards?.filter((card) =>
     card.cardNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
     card.user.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -53,7 +51,7 @@ export function PassCardsTable({ searchQuery }: PassCardsTableProps) {
             {filteredCards.map((card) => (
               <TableRow key={card.id}>
                 <TableCell className="font-medium">{card.cardNumber}</TableCell>
-                <TableCell>{card.user.name}</TableCell>
+                <TableCell>{card?.user?.firstName}</TableCell>
                 <TableCell>
                   <PassCardStatusBadge status={card.status} />
                 </TableCell>
@@ -63,15 +61,15 @@ export function PassCardsTable({ searchQuery }: PassCardsTableProps) {
                 <TableCell className="text-right">
                   <PassCardActions
                     onView={() => {
-                      setSelectedCard(card)
+                      setSelectedPassCard(card)
                       setIsDetailsOpen(true)
                     }}
                     onEdit={() => {
-                      setSelectedCard(card)
+                      setSelectedPassCard(card)
                       setIsUpdateOpen(true)
                     }}
                     onShipment={() => {
-                      setSelectedCard(card)
+                      setSelectedPassCard(card)
                       setIsShipmentOpen(true)
                     }}
                   />
@@ -83,19 +81,19 @@ export function PassCardsTable({ searchQuery }: PassCardsTableProps) {
       </div>
 
       <PassCardDetailsDialog
-        passCard={selectedCard}
+        passCard={selectedPassCard}
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
       />
 
       <UpdatePassCardDialog
-        passCard={selectedCard}
+        passCard={selectedPassCard}
         open={isUpdateOpen}
         onOpenChange={setIsUpdateOpen}
       />
 
       <ShipmentDialog
-        passCard={selectedCard}
+        passCard={selectedPassCard}
         open={isShipmentOpen}
         onOpenChange={setIsShipmentOpen}
       />

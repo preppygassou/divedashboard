@@ -181,7 +181,7 @@ model PassCard {
   cardNumber     String              @unique
   userId         String
   orderId        String
-  status         PassCardStatus
+  status         PassCardStatus      @default(pending)
   tier           CardTier
   validFrom      DateTime?
   validUntil     DateTime?
@@ -368,6 +368,7 @@ enum OrderStatus {
 
 enum PassCardStatus {
   activated
+  pending
   expired
   cancelled
 }

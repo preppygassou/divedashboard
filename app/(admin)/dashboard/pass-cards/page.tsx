@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
+import { PassCard } from "@/lib/types/pass-card"
 import { Input } from "@/components/ui/input"
 import { PassCardsTable } from "@/components/admin/pass-cards/pass-cards-table"
 import { PassCardFilters } from "@/components/admin/pass-cards/pass-card-filters"
@@ -9,17 +10,148 @@ import { Plus, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"; // Assuming you have a Button component
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"; // Your modal component
 import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { passCardSchema } from "@/lib/schemas/passcard"
+import axios from "axios"
+import { PassCardFormDialog } from "@/components/admin/pass-cards/pass-card-form-dialog"
+import { useToast } from "@/components/ui/use-toast"
+import { PassCardDetailsDialog } from "@/components/admin/pass-cards/pass-card-details-dialog"
+import Loading from "@/components/global/loading"
 
 export default function PassCardsPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const { register, handleSubmit, reset } = useForm();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [orders, setOrders] = useState([])
+  const [passCards, setPassCards] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [selectedPassCard, setSelectedPassCard] = useState<PassCard | null>(null)
+  const { toast } = useToast()
 
-  const onSubmit = (data: any) => {
-    console.log("New Pass Card Data:", data);
-    // Add API call to create a new pass card
-    reset(); // Reset the form after submission
-  };
+  const handleCreatePasscard = async (passcard: PassCard) => {
 
+    try {
+      setLoading(true)
+      const selectedOrder = orders?.find(order => order.id === passcard.orderId);
+      const userId = selectedOrder ? selectedOrder.userId : null;
+
+      // Check if a passcard with the same orderId already exists
+      const existingPassCard = passCards.find(pc => pc.orderId === passcard.orderId);
+      if (existingPassCard) {
+        toast({
+          title: "Erreur",
+          description: "Un pass card avec cet commande existe déjà.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const { data } = await axios.post('/api/pass-cards', { ...passcard, userId });
+      
+      setPassCards((prevPassCards) => [...prevPassCards, data]);
+      setIsCreateDialogOpen(false)
+      toast({
+        title: "Pass card créé",
+        description: `${passcard.cardNumber} a été créé avec succès.`,
+      })
+      setLoading(false)
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Échec de la création du produit",
+        variant: "destructive",
+      })
+      setLoading(false)
+    }
+  }
+
+  const handleUpdatePasscard = async (passcard: PassCard) => {
+    try {
+      setLoading(true)
+      const { data } = await axios.patch('/api/pass-cards/' + passcard.id, passcard);
+      setPassCards((prevPassCards) =>
+        prevPassCards.map((pc) => (pc.id === data.id ? data : pc))
+      );
+      setIsCreateDialogOpen(false)
+      toast({
+        title: "Pass card mis à jour",
+        description: `${passcard.cardNumber} a été mis à jour avec succès.`,
+      })
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      toast({
+        title: "Erreur",
+        description: "Échec de la mise à jour du Pass card",
+        variant: "destructive",
+      })
+    }
+  }
+
+  useEffect(() => {
+    async function fetchsetPassCards() {
+      try {
+        const response = await fetch(`/api/pass-cards`)
+        const data = await response.json()
+        setPassCards(data)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des commandes:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchsetPassCards()
+  }, [])
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch(`/api/orders`)
+        const data = await response.json()
+        setOrders(data)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des commandes:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchOrders()
+  }, [])
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch(`/api/orders`)
+        const data = await response.json()
+        setOrders(data)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des commandes:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchOrders()
+  }, [])
+
+  /*  console.log("orders",orders)
+  */
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -32,62 +164,35 @@ export default function PassCardsPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8"
           />
-           {/* Create New Pass Card Button */}
-           <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-blue-500 text-white hover:bg-blue-600">
-                <Plus className="mr-2 h-4 w-4" />
-                New Pass Card
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create New Pass Card</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <Input
-                  {...register("name")}
-                  placeholder="Pass Card Name"
-                  required
-                />
-                <Input
-                  {...register("type")}
-                  placeholder="Type (e.g., Gold, Silver)"
-                  required
-                />
-                <Input
-                  {...register("validity")}
-                  placeholder="Validity (e.g., 2024-12-31)"
-                  required
-                  type="date"
-                />
-                <Input
-                  {...register("status")}
-                  placeholder="Status (e.g., Active, Expired)"
-                  required
-                />
-                <DialogFooter>
-                  <Button type="submit" className="bg-green-500 hover:bg-green-600">
-                    Save
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => reset()}
-                  >
-                    Cancel
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+
         </div>
       </div>
 
       <Card>
-        <PassCardFilters />
-        <PassCardsTable searchQuery={searchQuery} />
+        <PassCardFilters onCreateNew={() => setIsCreateDialogOpen(true)} />
+        <PassCardsTable passCards={passCards} searchQuery={searchQuery} setSelectedPassCard={setSelectedPassCard} selectedPassCard={selectedPassCard} />
       </Card>
+      {/* Create New Pass Card Button */}
+      <PassCardFormDialog
+        orders={orders}
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onSubmit={handleCreatePasscard}
+      />
+      <PassCardDetailsDialog
+        orders={orders}
+        passcard={selectedPassCard}
+        setSelectedPassCard={setSelectedPassCard}
+        open={!!selectedPassCard}
+        onOpenChange={(open) => !open && setSelectedPassCard(null)}
+        onSubmit={handleUpdatePasscard}
+
+      />
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Loading />
+        </div>
+      )}
     </div>
   )
 }

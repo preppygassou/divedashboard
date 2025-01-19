@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { orderId, status, trackingNumber } = body;
+    const { orderId,tier,validFrom,validUntil, status="activated", trackingNumber } = body;
 
     const order = await db.order.findUnique({
       where: { id: orderId }
@@ -65,11 +65,12 @@ export async function POST(req: Request) {
       data: {
       userId: order.userId,
       orderId: order.id,
-      tier: order.tier,
+      tier,
+      validFrom: new Date(validFrom),
+      validUntil: new Date(validUntil),
       status,
       trackingNumber,
-      cardNumber
-      : generateCardNumber()
+      cardNumber: generateCardNumber()
       }
     });
 
